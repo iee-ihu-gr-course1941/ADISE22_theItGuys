@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      $(document).ready(function () {
+        $.ajax({
+          url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getInfo",
+          method: "POST",
+          data: {
+            room_id: 2,
+          },
+          success: function (response) {
+            var obj = jQuery.parseJSON(response);
+            console.log(obj);
+            $("body").append(
+              "<h1>ID: " +
+                obj.id +
+                "</h1>" +
+                "<h1>Name: " +
+                obj.name +
+                "</h1>" +
+                "<h1>users online: " +
+                obj.users_online +
+                "</h1>" +
+                "<h1>status: " +
+                obj.status +
+                "</h1>"
+            );
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

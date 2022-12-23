@@ -1,96 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <title>Document</title>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <title>Document</title>
+    </head>
 
-  <body>
-    <div class="main">
-      <div class="row">
-        <span style="display: flex">
-          <h2>Avaible Rooms:</h2>
-          <h2 id="totalRooms"></h2>
-        </span>
-      </div>
-      <div class="row">
-        <div class="box">
-          <h3 class="boxTitle"></h3>
+    <body>
+        <div class="main">
+            <div id="showAvaibleRooms">
+            <div class="row">
+                <span style="display: flex">
+                <h2>Avaible Rooms:</h2>
+                <h2 id="totalRooms"></h2>
+            </span>
+            </div>
         </div>
-        <div class="box">
-          <h3 class="boxTitle"></h3>
-        </div>
-        <div class="box">
-          <h3 class="boxTitle"></h3>
-        </div>
-      </div>
-    </div>
 
-    <style>
-      html,
-      body {
-        box-sizing: border-box;
-        padding: 0;
-        margin: 0;
-        width: 100%;
-      }
 
-      .main {
-        width: 100vw;
-        background-color: lightslategray;
-        padding: 20px 0;
-      }
+        <style>
+            html,
+            body {
+                box-sizing: border-box;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+            }
 
-      .row {
-        display: flex;
-        justify-content: space-evenly;
-        padding: 10px 0;
-      }
+            .main {
+                width: 100vw;
+                background-color: lightslategray;
+                padding: 20px 0;
+            }
 
-      .box {
-        width: 160px;
-        height: 160px;
-        border: 1px solid black;
-        background-color: #008000;
-      }
-    </style>
+            .row {
+                display: flex;
+                justify-content: space-evenly;
+                padding: 10px 0;
+            }
 
-    <script>
-      $(document).ready(function () {
-        //get all rooms except full
-        $.ajax({
-          url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/bluff/",
-          type: "POST",
-          success: function (response) {
-            var count = 0;
-            $(".boxTitle").each(function () {
-              $(this).text(response.records[count].name);
-              count++;
+            .box {
+                width: 160px;
+                height: 160px;
+                border: 1px solid black;
+                background-color: #008000;
+            }
+        </style>
+
+        <script>
+            $(document).ready(function () {
+                //get all rooms except full
+                $.ajax({
+                url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/bluff/",
+                type: "POST",
+                success: function (response) {
+                    var count = 0;
+                    //console.log(response.records.length);
+                    for (var i = 1; i <= response.records.length; i++) {
+                    if (i == 1 || (i - 1) % 3 == 0)
+                        $("#showAvaibleRooms").append('<div class="row"></div>');
+                    //get last row of page
+                    $(".row:last-child").append(
+                        '<a href="http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/'+ response.records[i - 1].id +'" ><div class="box"><h3 class="boxTitle">' +
+                        response.records[i - 1].name +
+                        "</h3></div></a>"
+                    );
+                    }
+                    //set avaible rooms
+                    $("#totalRooms").text(response.count);
+                },
+                });
+
+                //set interval every 5 sec to reload avaible rooms
+                var intervalId = window.setInterval(function () {
+                    
+                if ($("#totalRooms").text() !== '6') {
+                    $.ajax({
+                    url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/bluff/getTotalRooms",
+                    type: "POST",
+                    success: function (response) {
+                        $("#totalRooms").empty();
+                        $("#totalRooms").text(response);
+                    },
+                    error: function (response) {
+                        console.log(response.error);
+                    },
+                    });
+                }
+                }, 4000);
+                //
             });
-            $("#totalRooms").text(response.count);
-          },
-        });
-
-        //set interval every 5 sec to reload avaible rooms
-        var intervalId = window.setInterval(function () {
-          if ($("#totalRooms").text() !== "6") {
-            $.ajax({
-              url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/bluff/getTotalRooms",
-              type: "POST",
-              success: function (response) {
-                $("#totalRooms").text(response.count);
-              },
-              error: function (response) {
-                console.log(response.error);
-              },
-            });
-          }
-        }, 5000);
-        //
-      });
-    </script>
-  </body>
+        </script>
+    </body>
 </html>
