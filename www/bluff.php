@@ -18,6 +18,9 @@ switch ($r = array_shift($request)) {
             case null:
                 show_home($method);
                 break;
+            case 'getTotalRooms':
+                getNumOfTotalRooms($method);
+                break;
             default:
                 header("HTTP/1.1 404 Not Found");
                 break;
@@ -33,6 +36,15 @@ function show_home($method)
     if (strcmp($method, "GET")  ==  0) {
         header('location: ../../home.html');
     } else if (strcmp($method, "POST") == 0) {
-        show_rooms();
+        show_rooms('full');
+    }
+}
+
+function getNumOfTotalRooms($method)
+{
+    if (strcmp($method, "GET")  ==  0) {
+        header("HTTP/1.1 405 Not Allowed");
+    } else if (strcmp($method, "POST") == 0) {
+        show_rooms('numOfRooms');
     }
 }

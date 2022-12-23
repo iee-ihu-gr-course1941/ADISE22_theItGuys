@@ -1,5 +1,5 @@
 <?php
-require_once "db_upass.php";
+require_once "db_pass.php";
 
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', $DB_USER);
