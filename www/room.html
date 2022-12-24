@@ -10,6 +10,7 @@
   <body>
     <script>
       $(document).ready(function () {
+        var deckOfCardsArray = shuffle(deckOfCards());
         $.ajax({
           url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getInfo",
           method: "POST",
@@ -18,7 +19,6 @@
           },
           success: function (response) {
             var obj = jQuery.parseJSON(response);
-            console.log(obj);
             $("body").append(
               "<h1>ID: " +
                 obj.id +
@@ -35,7 +35,55 @@
             );
           },
         });
+
+        //cards stuff
+        function deckOfCards() {
+          let suits = ["♦", "♥", "♣", "♠"];
+          let values = [
+            "A",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "J",
+            "Q",
+            "K",
+          ];
+
+          let deckOfCardsArray = [];
+          for (var i = 0; i < suits.length; i++)
+            for (var j = 0; j < values.length; j++)
+              deckOfCardsArray.push(values[j] + suits[i]);
+
+          return deckOfCardsArray;
+        }
       });
+
+      //shuffle array of cards
+      function shuffle(array) {
+        let currentIndex = array.length,
+          randomIndex;
+
+        // While there remain elements to shuffle.
+        while (currentIndex != 0) {
+          // Pick a remaining element.
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex],
+            array[currentIndex],
+          ];
+        }
+
+        return array;
+      }
     </script>
   </body>
 </html>
