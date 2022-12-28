@@ -78,3 +78,16 @@ function get_room_info($room_id)
 
     print json_encode($res->fetch_array(MYSQLI_ASSOC));
 }
+
+function getGameStatus($roomTitle)
+{
+    global $conn;
+
+    $sql = 'select status from rooms where name=?';
+    $st = $conn->prepare($sql);
+    $st->bind_param('i', $roomTitle);
+    $st->execute();
+    $res = $st->get_result();
+
+    print json_encode($res->fetch_array(MYSQLI_ASSOC));
+}
