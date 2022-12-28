@@ -4,8 +4,12 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+         rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-        <title>Document</title>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <title>Bluff game</title>
     </head>
 
     <body>
@@ -13,12 +17,14 @@
             <div id="showAvaibleRooms">
             <div class="row">
                 <span style="display: flex">
-                <h2>Avaible Rooms:</h2>
+                <h2 class="text-center">Available Rooms:</h2>
                 <h2 id="totalRooms"></h2>
             </span>
             </div>
+            </div> 
         </div>
 
+        <div class="bg-image"></div>
 
         <style>
             html,
@@ -29,17 +35,28 @@
                 width: 100%;
             }
 
-            .main {
+            .bg-image {
+                /* The image used */
+                background-image: url("dice-and-three-aces--close-up-71385300-fe32fec67224429c98a2a96010ceb9e9.jpg");
+                /* Add the blur effect */
+                filter: blur(8px);
+                -webkit-filter: blur(8px);
+                height: 125vh;
+                /* Center and scale the image nicely */
+                background-size: cover;
+            }
+
+          /*  .main {
                 width: 100vw;
-                background-color: lightslategray;
-                padding: 20px 0;
+                background-color: rgb(59, 222, 86);
+                padding: 3px 0;
             }
 
             .row {
                 display: flex;
-                justify-content: space-evenly;
+                justify-content: space-evenly; 
                 padding: 10px 0;
-            }
+            } */
 
             .box {
                 width: 160px;
@@ -47,6 +64,8 @@
                 border: 1px solid black;
                 background-color: #008000;
             }
+
+            
         </style>
 
         <script>
