@@ -36,7 +36,10 @@ switch ($r = array_shift($request)) {
                 loadRoomInfo($method);
                 break;
             case 'getGameStatus':
-                getGameStatus($method);
+                getGameStatus($_REQUEST["id"]);
+                break;
+            case 'getRoomPlayers':
+                getOnlinePlayersByRoomId($_REQUEST["roomId"]);
                 break;
             default:
                 header("HTTP/1.1 404 Not Found");

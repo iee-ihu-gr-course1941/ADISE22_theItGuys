@@ -31,7 +31,7 @@
     <style>
       .bg-image {
         /* The image used */
-        background-image: url("que-es-un-bluff-poker-significado-consejos-y-formas-de-enganar-a-tus-oponentes.jpg");
+        background-image: url("imageedit_3_5252609884.jpg");
         height: 100vh;
         background-size: cover;
       }
@@ -87,6 +87,24 @@
           },
         });
 
+        //get rooms players
+        function getRoomPlayers(roomID) {
+          var resposeArray;
+          $.ajax({
+            url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getRoomPlayers",
+            type: "POST",
+            data: {
+              roomId: roomID,
+            },
+            success: function (response) {
+              resposeArray = JSON.parse(response);
+            },
+            error: function (response) {
+              console.log(response.error);
+            },
+          });
+        }
+
         //cards stuff
         function deckOfCards() {
           let suits = ["♦", "♥", "♣", "♠"];
@@ -113,6 +131,30 @@
 
           return deckOfCardsArray;
         }
+
+        var intervalRoomStatus = window.setInterval(function () {
+          /* console.log($("#roomTitle").text()); */
+          $.ajax({
+            url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getGameStatus",
+            type: "POST",
+            data: {
+              id: 2,
+            },
+            success: function (response) {
+              var obj = JSON.parse(response);
+              /* console.log(obj); */
+              if (obj.status === "pending" || obj.status === "empty") {
+                return;
+              } else {
+                //find players
+                getRoomPlayers(2);
+              }
+            },
+            error: function (response) {
+              console.log(response.error);
+            },
+          });
+        }, 2500);
       });
 
       //shuffle array of cards
@@ -135,23 +177,6 @@
 
         return array;
       }
-
-      var intervalRoomStatus = window.setInterval(function () {
-        $.ajax({
-          url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getGameStatus",
-          type: "POST",
-          data: {
-            roomTitle: $("#roomTitle").text(),
-          },
-          success: function (response) {
-            var obj = response;
-            console.log(obj);
-          },
-          error: function (response) {
-            console.log(response.error);
-          },
-        });
-      }, 2500);
     </script>
   </body>
 </html>

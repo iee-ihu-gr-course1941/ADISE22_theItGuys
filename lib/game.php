@@ -79,15 +79,32 @@ function get_room_info($room_id)
     print json_encode($res->fetch_array(MYSQLI_ASSOC));
 }
 
-function getGameStatus($roomTitle)
+function getGameStatus($id)
 {
     global $conn;
 
-    $sql = 'select status from rooms where name=?';
+    $sql = 'select status from rooms where id=?';
     $st = $conn->prepare($sql);
-    $st->bind_param('i', $roomTitle);
+    $st->bind_param('i', $id);
     $st->execute();
     $res = $st->get_result();
 
     print json_encode($res->fetch_array(MYSQLI_ASSOC));
+}
+
+function getOnlinePlayersByRoomId($roomId)
+{
+    global $conn;
+
+    $users = array();
+
+    $stmt = $conn->prepare('select distinct user_id from bluff where room_id=?');
+    $stmt->bind_param('i', $roomId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        array_push($users, $row['user_id']);
+    }
+
+    print json_encode($users);
 }
