@@ -1,7 +1,13 @@
 <?php
+session_start();
 if (isset($_COOKIE['room'])) {
     unset($_COOKIE['room']);
     setcookie('room', null, -1, '/');
+}
+
+if (isset($_SESSION['user'])) {
+    $json = json_decode($_SESSION['user']);
+    $name =  (string)$json->name;
 }
 ?>
 
@@ -24,9 +30,16 @@ if (isset($_COOKIE['room'])) {
     <div class="container-fluid bg-image">
         <div id="showAvaibleRooms">
             <div class="row">
-                <span style="display: flex">
-                    <h2 class="text-center">Available Rooms:</h2>
-                    <h2 id="totalRooms"></h2>
+                <span class="d-flex justify-content-between">
+                    <span class="d-flex gap-1">
+                        <h2 class="text-center">Available Rooms:</h2>
+                        <h2 id="totalRooms"></h2>
+                    </span>
+                    <?php
+                    if (isset($_SESSION['user'])) {
+                        echo '<h5>userName:  ' . $name . '</h5>';
+                    }
+                    ?>
                 </span>
             </div>
         </div>
@@ -78,7 +91,9 @@ if (isset($_COOKIE['room'])) {
     <script>
         $(document).ready(function() {
             //check if user needs to login
-            has_user_logged_in();
+            var userName = <?php if (isset($_SESSION['user'])) echo $name ?>;
+            if (userName = '' || userName == null)
+                has_user_logged_in();
             //get all rooms except full
             $.ajax({
                 url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/bluff/",
