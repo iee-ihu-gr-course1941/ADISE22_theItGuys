@@ -91,9 +91,12 @@ if (isset($_SESSION['user'])) {
     <script>
         $(document).ready(function() {
             //check if user needs to login
-            var userName = <?php if (isset($_SESSION['user'])) echo $name ?>;
-            if (userName = '' || userName == null)
+            var userName = <?php if (!empty($_SESSION['user'])) echo $_SESSION['user'];
+                            else echo "null"; ?>;
+            if (userName = '' || userName == null) {
                 has_user_logged_in();
+            }
+
             //get all rooms except full
             $.ajax({
                 url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/bluff/",
