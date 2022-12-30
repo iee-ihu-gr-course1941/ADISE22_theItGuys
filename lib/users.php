@@ -27,6 +27,14 @@ function setUser($usernameInput)
     $st->bind_param('s', $usernameInput['username']);
     $st->execute();
     $res = $st->get_result();
+
+    //user session 
+    $userData = $res->fetch_all(MYSQLI_ASSOC)[0];
+    $userObj = '{"id":"' . $userData["id"] . '","name":"' . $userData["name"] . '","token":"' . $userData['token'] . '"}';
+
+    session_start();
+    $_SESSION['user'] = $userObj;
+
     header('Content-type: application/json');
-    print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+    print json_encode($userObj);
 }

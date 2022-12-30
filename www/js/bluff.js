@@ -19,8 +19,8 @@ function log_in_to_game() {
             username: $("#pickedUsername").val(),
         }),
         success: function (response) {
-            me = response[0];
-            login_result;
+            me = response /* [0] */;
+            login_result();
             $("#usernameModal").toggle();
         },
         error: login_error,

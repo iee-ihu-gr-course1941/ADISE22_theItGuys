@@ -18,7 +18,7 @@ function log_in_to_game($b)
     //$roomData = get_room_info($b);
 
     //return view
-    header('location: ../../room.html');
+    header('location: ../../room.php');
 }
 
 function update_room_and_user_status($room_id)
