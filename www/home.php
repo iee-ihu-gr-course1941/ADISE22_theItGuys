@@ -1,3 +1,10 @@
+<?php
+if (isset($_COOKIE['room'])) {
+    unset($_COOKIE['room']);
+    setcookie('room', null, -1, '/');
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

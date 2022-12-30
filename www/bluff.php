@@ -70,14 +70,14 @@ switch ($r = array_shift($request)) {
         }
         break;
     default:
-        header("location: home.html");
+        header("location: home.php");
         exit;
 }
 
 function show_home($method)
 {
     if (strcmp($method, "GET")  ==  0) {
-        header('location: ../../home.html');
+        header('location: ../../home.php');
     } else if (strcmp($method, "POST") == 0) {
         show_rooms('full');
     }
