@@ -22,6 +22,10 @@
         $name =  (string)$json->name;
     }
 
+    if (isset($_COOKIE["room"])) {
+        $room = $_COOKIE["room"];
+    }
+
     ?>
 
     <div class="container-fluid bg-image">
@@ -68,11 +72,12 @@
     <script>
         $(document).ready(function() {
             var deckOfCardsArray = shuffle(deckOfCards());
+            var roomID = <?php if (isset($_COOKIE["room"]) && !is_null($_COOKIE["room"])) echo $_COOKIE["room"]; ?>;
             $.ajax({
                 url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getInfo",
                 method: "POST",
                 data: {
-                    room_id: 2,
+                    room_id: roomID,
                 },
                 success: function(response) {
                     var obj = jQuery.parseJSON(response);
@@ -117,7 +122,7 @@
                     url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getGameStatus",
                     type: "POST",
                     data: {
-                        id: 2,
+                        id: roomID,
                     },
                     success: function(response) {
                         var obj = JSON.parse(response);
@@ -126,7 +131,7 @@
                             return;
                         } else {
                             //find players
-                            getRoomPlayers(2);
+                            getRoomPlayers(roomID);
                         }
                     },
                     error: function(response) {

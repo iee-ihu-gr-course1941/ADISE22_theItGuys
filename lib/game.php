@@ -17,6 +17,9 @@ function log_in_to_game($b)
     //get info about this room -- getting them on load without dynamic id
     //$roomData = get_room_info($b);
 
+    //set cookie for roomId
+    setcookie("room", $b, time() + 86400, "/");
+
     //return view
     header('location: ../../room.php');
 }
@@ -99,7 +102,7 @@ function getOnlinePlayersByRoomId($roomId)
     $users = array();
 
     $stmt = $conn->prepare('select distinct user_id from bluff where room_id=?');
-    $stmt->bind_param('i', $roomId);
+    $stmt->bind_param('s', $roomId);
     $stmt->execute();
     $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
