@@ -2,11 +2,8 @@ var roomID = $("#awesome").val();
 //
 var room = { name: null, users_online: null, roomStatus: null };
 var otherUsers = [];
-var deckOfCardsArray = [];
 
 $(function () {
-    deckOfCardsArray = shuffle(deckOfCards());
-
     //fill room object
     get_room_info();
 
@@ -61,32 +58,6 @@ function getOtherUsersInRoom() {
     });
 }
 
-//cards stuff
-function deckOfCards() {
-    let suits = ["♦", "♥", "♣", "♠"];
-    let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-
-    let deckOfCardsArray = [];
-    for (var i = 0; i < suits.length; i++) for (var j = 0; j < values.length; j++) deckOfCardsArray.push(values[j] + suits[i]);
-
-    return deckOfCardsArray;
-}
-
-//shuffle array of cards
-function shuffle(array) {
-    let currentIndex = array.length,
-        randomIndex;
-
-    while (currentIndex != 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-
-    return array;
-}
-
 function startGameBase() {
     $.ajax({
         url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/start",
@@ -121,7 +92,6 @@ function isOwner() {
 
 function startGame() {
     startGameBase();
-    console.log(deckOfCardsArray);
     //update everyones cards
 }
 
