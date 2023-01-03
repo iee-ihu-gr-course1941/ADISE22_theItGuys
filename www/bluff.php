@@ -51,6 +51,9 @@ switch ($r = array_shift($request)) {
             case 'getRoomPlayers':
                 getOnlinePlayersByRoomId($_REQUEST["roomId"]);
                 break;
+            case 'start':
+                startGame();
+                break;
             default:
                 header("HTTP/1.1 404 Not Found");
                 break;
