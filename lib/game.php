@@ -100,14 +100,26 @@ function getOnlinePlayersByRoomId($roomId)
     global $conn;
 
     $users = array();
+    $usernames = array();
 
     $stmt = $conn->prepare('select distinct user_id from bluff where room_id=?');
     $stmt->bind_param('s', $roomId);
     $stmt->execute();
     $result = $stmt->get_result();
+
     while ($row = $result->fetch_assoc()) {
         array_push($users, $row['user_id']);
     }
 
-    print json_encode($users);
+    if (!empty($users)) {
+        foreach ($users as $user) {
+            $stmt = $conn->prepare('select name from users where id=?');
+            $stmt->bind_param('s', $user);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            array_push($usernames, $result->fetch_assoc()["name"]);
+        }
+    }
+
+    print json_encode($usernames);
 }
