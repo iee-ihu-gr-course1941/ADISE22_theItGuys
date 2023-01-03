@@ -171,12 +171,84 @@ function startGame()
     }
 
     $playersTurn = getGameOwner();
-    /* var_dump($playersTurn);
-    exit; */
     $gameEnded = "0";
 
     global $conn;
     $stmt = $conn->prepare('insert into game_status(player_turn_id ,room_id ,game_ended) values (?,?,?);');
     $stmt->bind_param('sss', $playersTurn, $_COOKIE["room"], $gameEnded);
     $stmt->execute();
+
+    createDeckOfCardsAndSplit();
+}
+
+function getOwnerInfo()
+{
+    $info = getGameOwner();
+    if (isset($_SESSION["user"]))
+        if (json_decode($_SESSION["user"])->id == (int)$info) {
+            print "true";
+            exit;
+        } else {
+            print "false";
+            exit;
+        }
+    else {
+        print json_encode(['errormesg' => "ownerdoesnotexist."]);
+        exit;
+    }
+}
+
+function createDeckOfCardsAndSplit()
+{
+    $suits = ["♦", "♥", "♣", "♠"];
+    $values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+    $deckOfCards = array();
+
+    $usersInGame = []; //"13", "4", "3", "6"
+
+    //get users in room (temp)
+    global $conn;
+    $t = "1";
+    $stmt = $conn->prepare('select id from users where room_id=? order by log_in_time asc');
+    $stmt->bind_param('s', $t);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    foreach ($result->fetch_all(MYSQLI_ASSOC) as $user) {
+        array_push($usersInGame, $user["id"]);
+    }
+
+    for ($i = 0; $i < sizeof($suits); $i++)
+        for ($j = 0; $j < sizeof($values); $j++)
+            array_push($deckOfCards, array("value" => $values[$j], "suit" => $suits[$i], "user" => null));
+
+    shuffle($deckOfCards);
+
+    $usersInGameIndex = 0;
+    for ($i = 0; $i < sizeof($deckOfCards); $i++) {
+        if ($i % 13 == 0 && $i <= 42 && $i != 0)
+            $usersInGameIndex++;
+
+        $deckOfCards[$i]["user"] = $usersInGame[$usersInGameIndex];
+    }
+    var_dump($deckOfCards);
+    exit;
+    //save to db
+    addCardsToDb($deckOfCards);
+}
+
+function addCardsToDb($deckOfCards)
+{
+    if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "roomDoesNotExist."]);
+        exit;
+    }
+
+    global $conn;
+
+    foreach ($deckOfCards as $card) {
+        $stmt = $conn->prepare('insert into bluff(card_number ,card_style ,user_id, room_id) values (?,?,?,?);');
+        $stmt->bind_param('ssss', $card["value"], $card["suit"], $card["user"], $_COOKIE["room"]);
+        $stmt->execute();
+    }
 }

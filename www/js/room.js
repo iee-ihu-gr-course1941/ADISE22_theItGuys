@@ -19,7 +19,7 @@ $(function () {
         console.log(otherUsers);
     }
 
-    if (room.roomStatus === "full") startGameBase();
+    if (room.roomStatus === "full") if (isOwner()) startGame();
 });
 
 function get_room_info() {
@@ -99,6 +99,28 @@ function startGameBase() {
     });
 }
 
-function dealCards{
-    
+
+
+function isOwner() {
+    var isOwner = false;
+    $.ajax({
+        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getGameOwner",
+        type: "GET",
+        async: false,
+        success: function (response) {
+            if (response === "true") isOwner = true;
+            console.log(response);
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
+
+    return isOwner;
+}
+
+function startGame() {
+    startGameBase();
+    console.log(deckOfCardsArray);
+    //update everyones cards
 }
