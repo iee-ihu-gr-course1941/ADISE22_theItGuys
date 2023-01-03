@@ -18,6 +18,8 @@ $(function () {
         //show their names
         console.log(otherUsers);
     }
+
+    if (room.roomStatus === "full") startGameBase();
 });
 
 function get_room_info() {
@@ -81,4 +83,18 @@ function shuffle(array) {
     }
 
     return array;
+}
+
+function startGameBase() {
+    $.ajax({
+        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/start",
+        type: "GET",
+        async: false,
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
 }

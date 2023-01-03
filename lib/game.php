@@ -138,4 +138,45 @@ function setGameOwner($roomId)
     $stmt = $conn->prepare('update rooms set owner_id=? WHERE id=?');
     $stmt->bind_param('ss', $owner[0]["id"], $roomId);
     $stmt->execute();
+
+    if ((int)$owner[0]["id"] == $obj->id)
+        $_SESSION["ownerOf"] = $roomId;
+}
+
+function getGameOwner()
+{
+    //$player = null;
+    session_start();
+    if (isset($_SESSION["ownerOf"]) && isset($_COOKIE["room"])) {
+        if ((int)$_SESSION["ownerOf"] == (int)$_COOKIE["room"])
+            return json_decode($_SESSION["user"])->id;
+    } else {
+        global $conn;
+        $stmt = $conn->prepare('select id from users where room_id=? order by log_in_time asc limit 1');
+        $stmt->bind_param('s', $roomId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $owner = $result->fetch_all(MYSQLI_ASSOC);
+        return $owner[0]["id"];
+    }
+}
+
+function startGame()
+{
+    //people in room + other requirements
+    //playing now
+    if (isset($_COOKIE["room"]) && empty($_COOKIE["room"]) || (!isset($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "roomisnotavailable."]);
+        exit;
+    }
+
+    $playersTurn = getGameOwner();
+    /* var_dump($playersTurn);
+    exit; */
+    $gameEnded = "0";
+
+    global $conn;
+    $stmt = $conn->prepare('insert into game_status(player_turn_id ,room_id ,game_ended) values (?,?,?);');
+    $stmt->bind_param('sss', $playersTurn, $_COOKIE["room"], $gameEnded);
+    $stmt->execute();
 }
