@@ -99,6 +99,8 @@ function startGameBase() {
     });
 }
 
+
+
 function isOwner() {
     var isOwner = false;
     $.ajax({
