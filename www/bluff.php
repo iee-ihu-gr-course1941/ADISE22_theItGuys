@@ -57,6 +57,9 @@ switch ($r = array_shift($request)) {
             case 'getGameOwner':
                 getOwnerInfo();
                 break;
+            case 'getMyCards':
+                getMyCards($method);
+                break;
             default:
                 header("HTTP/1.1 404 Not Found");
                 break;

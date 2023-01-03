@@ -19,7 +19,9 @@ $(function () {
         console.log(otherUsers);
     }
 
-    if (room.roomStatus === "full") if (isOwner()) startGame();
+    if (room.roomStatus === "full")
+        if (isOwner()) startGame();
+        else getMyCards();
 });
 
 function get_room_info() {
@@ -99,8 +101,6 @@ function startGameBase() {
     });
 }
 
-
-
 function isOwner() {
     var isOwner = false;
     $.ajax({
@@ -123,4 +123,15 @@ function startGame() {
     startGameBase();
     console.log(deckOfCardsArray);
     //update everyones cards
+}
+
+function getMyCards() {
+    $.ajax({
+        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getMyCards",
+        method: "GET",
+        async: false,
+        success: function (response) {
+            console.log(JSON.parse(response));
+        },
+    });
 }

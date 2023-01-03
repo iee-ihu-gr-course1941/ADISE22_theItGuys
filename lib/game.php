@@ -153,7 +153,7 @@ function getGameOwner()
     } else {
         global $conn;
         $stmt = $conn->prepare('select id from users where room_id=? order by log_in_time asc limit 1');
-        $stmt->bind_param('s', $roomId);
+        $stmt->bind_param('s', $_COOKIE["room"]);
         $stmt->execute();
         $result = $stmt->get_result();
         $owner = $result->fetch_all(MYSQLI_ASSOC);
@@ -208,9 +208,8 @@ function createDeckOfCardsAndSplit()
 
     //get users in room (temp)
     global $conn;
-    $t = "1";
     $stmt = $conn->prepare('select id from users where room_id=? order by log_in_time asc');
-    $stmt->bind_param('s', $t);
+    $stmt->bind_param('s', $_COOKIE["room"]);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -231,8 +230,6 @@ function createDeckOfCardsAndSplit()
 
         $deckOfCards[$i]["user"] = $usersInGame[$usersInGameIndex];
     }
-    var_dump($deckOfCards);
-    exit;
     //save to db
     addCardsToDb($deckOfCards);
 }
@@ -251,4 +248,25 @@ function addCardsToDb($deckOfCards)
         $stmt->bind_param('ssss', $card["value"], $card["suit"], $card["user"], $_COOKIE["room"]);
         $stmt->execute();
     }
+}
+
+function getMyCards($method)
+{
+    session_start();
+    if (strcmp($method, "POST") == 0) {
+        print json_encode(['errormesg' => "serverSide."]);
+        exit;
+    }
+    if (!isset($_SESSION["user"])) {
+        print json_encode(['errormesg' => "userNotFound."]);
+        exit;
+    }
+
+    global $conn;
+    $stmt = $conn->prepare('select card_number, card_style from bluff where user_id=? order by card_style');
+    $stmt->bind_param('s', json_decode($_SESSION["user"])->id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    print json_encode($result->fetch_all(MYSQLI_ASSOC));
 }
