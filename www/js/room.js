@@ -98,3 +98,7 @@ function startGameBase() {
         },
     });
 }
+
+function dealCards{
+    
+}
