@@ -51,6 +51,9 @@ function getOtherUsersInRoom() {
         },
         success: function (response) {
             otherUsers = JSON.parse(response);
+            $("#userTwo").text(otherUsers[1].name);
+            $("#userThree").text(otherUsers[2].name);
+            $("#userFour").text(otherUsers[3].name);
         },
         error: function (response) {
             console.log(response.error);

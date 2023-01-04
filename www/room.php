@@ -46,6 +46,38 @@
                 ?>
             </div>
         </div>
+        <!-- emfanisi xristwn -->
+        <div class="row">
+            <div class="col-12">
+                <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
+                    <div style="width:40px;height:40px;background-color:red"></div>
+                    <p id="userThree" class="text-light"></p>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="height:60vh">
+            <div class="col-2 d-flex justify-content-center align-items-center">
+                <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
+                    <div style="width:40px;height:40px;background-color:red"></div>
+                    <p id="userFour" class="text-light"></p>
+                </div>
+            </div>
+            <div class="col-8">
+
+            </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">
+                <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
+                    <div style="width:40px;height:40px;background-color:red"></div>
+                    <p id="userTwo" class="text-light"></p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12 bg-dark" style="height: 25vh;">
+
+            </div>
+        </div>
+        <!-- -->
     </div>
 
     <style>
