@@ -1,6 +1,6 @@
-.card{
-    height: 100%;
-    width: 100%;
+.deckCard{
+    height: 150px;
+    width: 110px;
     border: 1px solid black;
     border-radius: .5rem;
     display: flex;
@@ -9,29 +9,31 @@
     user-select: none;
     font-size: 4rem;
     position: relative;
+    background-color: white;
 }
 
-.card.red{
+.deckCard.red{
    color: red; 
 }
 
-.card.black{
+.deckCard.black{
     color: black;
 }
 
-.card::before,
-.card::after{
-position: absolute;
-font-size: 1rem;
+.deckCard::before,
+.deckCard::after{
+    content: attr(data-value);
+    position: absolute;
+    font-size: 1.5rem;
 }
 
-.card::before{
-top: .5rem;
+.deckCard::before{
+top: .2rem;
 left: .5rem;
 }
 
-.card::after{
-bottom: .5rem;
+.deckCard::after{
+bottom: .2rem;
 right: .5rem;
 transform: rotate(180deg);
 }

@@ -2,6 +2,7 @@ var roomID = $("#awesome").val();
 //
 var room = { name: null, users_online: null, roomStatus: null };
 var otherUsers = [];
+var myCards;
 
 $(function () {
     //fill room object
@@ -104,7 +105,18 @@ function getMyCards() {
         method: "GET",
         async: false,
         success: function (response) {
-            console.log(JSON.parse(response));
+            myCards = JSON.parse(response);
+            showMyCards(myCards);
         },
+    });
+}
+
+function showMyCards(myCards){
+    $("#myCardsDisplay").empty();
+    $.each(myCards, function( index, value ) {
+        if(value.card_style == '♦' || value.card_style == '♥')  
+            $("#myCardsDisplay").append('<div class="deckCard red" data-value="' + value.card_number + value.card_style + '">' + value.card_style + '</div>');
+        else
+            $("#myCardsDisplay").append('<div class="deckCard black" data-value="' + value.card_number + value.card_style + '">' + value.card_style + '</div>');
     });
 }
