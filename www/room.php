@@ -36,7 +36,6 @@
         <div class="row">
             <input type="hidden" id="awesome" value="<?php if (isset($_COOKIE["room"]) && !is_null($_COOKIE["room"])) echo $_COOKIE["room"]; ?>">
             <div class="col-12 text-center text-white d-flex flex-row justify-content-between">
-                <!-- bg-text -->
                 <h3 id="roomTitle"></h3>
 
                 <?php
@@ -50,7 +49,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
-                    <div style="width:40px;height:40px;background-color:red"></div>
+                    <img src="userImg/user_icon_red.png" class="userIcon m-auto" alt="">
                     <p id="userThree" class="text-light"></p>
                 </div>
             </div>
@@ -58,7 +57,7 @@
         <div class="row" style="height:60vh">
             <div class="col-2 d-flex justify-content-center align-items-center">
                 <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
-                    <div style="width:40px;height:40px;background-color:red"></div>
+                    <img src="userImg/user_icon_yellow.png" class="userIcon m-auto" alt="">
                     <p id="userFour" class="text-light"></p>
                 </div>
             </div>
@@ -67,16 +66,17 @@
             </div>
             <div class="col-2 d-flex justify-content-center align-items-center">
                 <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
-                    <div style="width:40px;height:40px;background-color:red"></div>
+                    <img src="userImg/user_icon_white.png" class="userIcon m-auto" alt="">
                     <p id="userTwo" class="text-light"></p>
                 </div>
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-12 bg-dark" style="height: 25vh;">
+            <div class="col-12 bg-dark text-center" style="height: 25vh;">
                 <div id="myCardsDisplay" class="justify-content-center">
 
                 </div>
+                <button class="btn btn-warning mt-4">Play your cards</button>
             </div>
         </div>
         <!-- -->
@@ -84,28 +84,9 @@
 
     <style>
         .bg-image {
-            /* The image used */
             background-image: url("room.jpg");
             height: 100vh;
             background-size: cover;
-        }
-
-        .bg-text {
-            background-color: rgba(0, 0, 0, 0.038);
-            /* Fallback color */
-            background-color: rgba(0, 0, 0, 0.086);
-            /* Black w/opacity/see-through */
-            color: white;
-            font-weight: bold;
-            border: 3px solid #f1f1f1;
-            position: absolute;
-            top: 15%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
-            width: 80%;
-            padding: 10px;
-            text-align: center;
         }
         #myCardsDisplay{
             display: flex;

@@ -20,6 +20,8 @@ $(function () {
     if (room.roomStatus === "full")
         if (isOwner()) startGame();
         else getMyCards();
+
+    $(".deckCard").on("click", selectCards);
 });
 
 function get_room_info() {
@@ -119,4 +121,8 @@ function showMyCards(myCards){
         else
             $("#myCardsDisplay").append('<div class="deckCard black" data-value="' + value.card_number + value.card_style + '">' + value.card_style + '</div>');
     });
+}
+
+function selectCards(){
+    $(this).css('border', '5px solid blue');
 }

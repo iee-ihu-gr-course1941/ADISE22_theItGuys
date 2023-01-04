@@ -37,3 +37,8 @@ bottom: .2rem;
 right: .5rem;
 transform: rotate(180deg);
 }
+
+.userIcon{
+    height: 30px;
+    width: 30px;
+}
