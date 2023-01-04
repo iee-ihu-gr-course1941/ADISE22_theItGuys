@@ -31,24 +31,24 @@ if (isset($_SESSION['user'])) {
     <div class="container-fluid bg-image">
         <div id="showAvaibleRooms">
             <div class="row">
-            <div class="col-md-6 col-sm-1 col-lg-12">
-            <div class="p-3 mb-2 bg-info text-white">
-                <span class="d-flex justify-content-between">
-                    <span class="d-flex gap-1">
-                        <h2 class="text-center">Available Rooms:</h2>
-                        <h2 id="totalRooms"></h2>
-                    </span>
-                    <?php
-                    if (isset($_SESSION['user'])) {
-                        echo '<h5>Username:  <b><i>' .$name . '</h5></b></i>';
-                    }
-                    ?>
-                </span>
-            </div>
+                <div class="col-md-6 col-sm-1 col-lg-12">
+                    <div class="p-3 mb-2 bg-info text-white">
+                        <span class="d-flex justify-content-between">
+                            <span class="d-flex gap-1">
+                                <h2 class="text-center">Available Rooms:</h2>
+                                <h2 id="totalRooms"></h2>
+                            </span>
+                            <?php
+                            if (isset($_SESSION['user'])) {
+                                echo '<h5>Username:  <b><i>' . $name . '</h5></b></i>';
+                            }
+                            ?>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
     <!-- Modal -->
     <div class="modal" tabindex="-1" id="usernameModal" style="background-color: rgba(0, 0, 0, 0.534)">
         <div class="modal-dialog">
@@ -79,7 +79,7 @@ if (isset($_SESSION['user'])) {
         .bg-image {
             /* The image used */
             background-image: url("homeBg.jpg");
-            height: 102vh;
+            height: 100vh;
             /* Center and scale the image nicely */
             background-size: cover;
         }
