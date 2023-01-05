@@ -3,6 +3,7 @@ var roomID = $("#awesome").val();
 var room = { name: null, users_online: null, roomStatus: null };
 var otherUsers = [];
 var myCards;
+var bluffCards = [];
 
 $(function () {
     //fill room object
@@ -113,16 +114,22 @@ function getMyCards() {
     });
 }
 
-function showMyCards(myCards){
+function showMyCards(myCards) {
     $("#myCardsDisplay").empty();
-    $.each(myCards, function( index, value ) {
-        if(value.card_style == '♦' || value.card_style == '♥')  
-            $("#myCardsDisplay").append('<div class="deckCard red" data-value="' + value.card_number + value.card_style + '">' + value.card_style + '</div>');
-        else
-            $("#myCardsDisplay").append('<div class="deckCard black" data-value="' + value.card_number + value.card_style + '">' + value.card_style + '</div>');
+    $.each(myCards, function (index, value) {
+        if (value.card_style == "♦" || value.card_style == "♥") $("#myCardsDisplay").append('<div class="deckCard red" id="' + value.id + '" data-value="' + value.card_number + value.card_style + '">' + value.card_style + "</div>");
+        else $("#myCardsDisplay").append('<div class="deckCard black" id="' + value.id + '" data-value="' + value.card_number + value.card_style + '">' + value.card_style + "</div>");
     });
 }
 
-function selectCards(){
-    $(this).css('border', '5px solid blue');
+function selectCards() {
+    if ($(this).hasClass("selectedCards")) {
+        bluffCards.splice($.inArray($(this).attr("id"), bluffCards), 1);
+        $(this).removeClass("selectedCards");
+        return;
+    }
+    if (bluffCards.length < 4) {
+        $(this).addClass("selectedCards");
+        bluffCards.push($(this).attr("id"));
+    }
 }

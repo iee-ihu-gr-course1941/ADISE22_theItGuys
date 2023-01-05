@@ -42,3 +42,7 @@ transform: rotate(180deg);
     height: 30px;
     width: 30px;
 }
+
+.selectedCards{
+    border: 5px solid blue !important;
+}

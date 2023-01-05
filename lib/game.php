@@ -263,7 +263,7 @@ function getMyCards($method)
     }
 
     global $conn;
-    $stmt = $conn->prepare('select card_number, card_style from bluff where user_id=? order by card_style');
+    $stmt = $conn->prepare('select id, card_number, card_style from bluff where user_id=? order by card_style');
     $stmt->bind_param('s', json_decode($_SESSION["user"])->id);
     $stmt->execute();
     $result = $stmt->get_result();
