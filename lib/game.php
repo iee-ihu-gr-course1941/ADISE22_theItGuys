@@ -270,3 +270,30 @@ function getMyCards($method)
 
     print json_encode($result->fetch_all(MYSQLI_ASSOC));
 }
+
+function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
+{
+    if (strcmp($method, "GET") == 0) {
+        print json_encode(['errormesg' => "pathNotFound."]);
+        exit;
+    }
+
+    if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "roomDoesNotExist."]);
+        exit;
+    }
+
+    $numOfCardsPlayed = sizeof($cardsPlayed);
+
+    global $conn;
+    $stmt = $conn->prepare('select id from users where room_id=? order by log_in_time asc');
+    $stmt->bind_param('s', $_COOKIE["room"]);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $users = $result->fetch_all(MYSQLI_ASSOC)[0];
+
+    print json_encode($users);
+
+    /* print_r(); */
+    exit;
+}

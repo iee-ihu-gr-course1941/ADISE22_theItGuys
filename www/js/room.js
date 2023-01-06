@@ -23,6 +23,8 @@ $(function () {
         else getMyCards();
 
     $(".deckCard").on("click", selectCards);
+    $("#chooseYourBluffBtn").on("click", openBluffModal);
+    $(".bluffValueBtn").on("click", submitYourBluff);
 });
 
 function get_room_info() {
@@ -132,4 +134,29 @@ function selectCards() {
         $(this).addClass("selectedCards");
         bluffCards.push($(this).attr("id"));
     }
+}
+
+function openBluffModal() {
+    if (bluffCards.length === 0) alert("you must select at least one card");
+    else $("#chooseYourBluff").modal("toggle");
+}
+
+function submitYourBluff() {
+    console.log($(this).text());
+    console.log(bluffCards.length);
+    $.ajax({
+        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/playYourBluff",
+        type: "POST",
+        data: {
+            valueOfCardsPlayed: $(this).text() /* 
+            numberOfCardsPlayed: bluffCards.length, */,
+            cardsPlayed: bluffCards,
+        },
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
 }

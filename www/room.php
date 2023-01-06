@@ -73,38 +73,35 @@
                 <div id="myCardsDisplay" class="justify-content-center">
 
                 </div>
-                <button type="button" class="btn btn-warning mt-4" data-bs-toggle="modal" data-bs-target="#chooseYourBluff">
-                    Play your cards
-                </button>
+                <button type="button" id="chooseYourBluffBtn" class="btn btn-warning mt-4">Play your cards</button>
             </div>
         </div>
         <!-- -->
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="chooseYourBluff" tabindex="-1" aria-labelledby="chooseYourBluffLabel" aria-hidden="true">
+    <div class="modal fade modal-lg" id="chooseYourBluff" tabindex="-1" aria-labelledby="chooseYourBluffLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="chooseYourBluffLabel">Choose your Card</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <button type="button" class="btn btn-info mt-1 ml-1">A</button>
-                    <button type="button" class="btn btn-secondary mt-1 ml-1">2</button>
-                    <button type="button" class="btn btn-info mt-1 ml-1">3</button>
-                    <button type="button" class="btn btn-secondary mt-1 ml-1">4</button>
-                    <button type="button" class="btn btn-info mt-1 ml-1">5</button>
-                    <button type="button" class="btn btn-secondary mt-1 ml-1">6</button>
-                    <button type="button" class="btn btn-info mt-1 ml-1">7</button>
-                    <button type="button" class="btn btn-secondary mt-1 ml-1">8</button>
-                    <button type="button" class="btn btn-info mt-1 ml-1">9</button>
-                    <button type="button" class="btn btn-secondary mt-1 ml-1">10</button>
-                    <button type="button" class="btn btn-info mt-1 ml-1">J</button>
-                    <button type="button" class="btn btn-secondary mt-1 ml-1">Q</button>
-                    <button type="button" class="btn btn-info mt-1 ml-1">K</button>
+                <div class="modal-body text-center">
+                    <button type="button" class="btn btn-info mt-1 ml-1 bluffValueBtn">A</button>
+                    <button type="button" class="btn btn-secondary mt-1 ml-1 bluffValueBtn">2</button>
+                    <button type="button" class="btn btn-info mt-1 ml-1 bluffValueBtn">3</button>
+                    <button type="button" class="btn btn-secondary mt-1 ml-1 bluffValueBtn">4</button>
+                    <button type="button" class="btn btn-info mt-1 ml-1 bluffValueBtn">5</button>
+                    <button type="button" class="btn btn-secondary mt-1 ml-1 bluffValueBtn">6</button>
+                    <button type="button" class="btn btn-info mt-1 ml-1 bluffValueBtn">7</button>
+                    <button type="button" class="btn btn-secondary mt-1 ml-1 bluffValueBtn">8</button>
+                    <button type="button" class="btn btn-info mt-1 ml-1 bluffValueBtn">9</button>
+                    <button type="button" class="btn btn-secondary mt-1 ml-1 bluffValueBtn">10</button>
+                    <button type="button" class="btn btn-info mt-1 ml-1 bluffValueBtn">J</button>
+                    <button type="button" class="btn btn-secondary mt-1 ml-1 bluffValueBtn">Q</button>
+                    <button type="button" class="btn btn-info mt-1 ml-1 bluffValueBtn">K</button>
                 </div>
-
             </div>
         </div>
     </div>
