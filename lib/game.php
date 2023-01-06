@@ -263,7 +263,7 @@ function getMyCards($method)
     }
 
     global $conn;
-    $stmt = $conn->prepare('select id, card_number, card_style from bluff where user_id=? order by card_style');
+    $stmt = $conn->prepare('select id, card_number, card_style from bluff where user_id=? AND actions IS NULL order by card_style');
     $stmt->bind_param('s', json_decode($_SESSION["user"])->id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -273,13 +273,17 @@ function getMyCards($method)
 
 function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
 {
+    session_start();
     if (strcmp($method, "GET") == 0) {
         print json_encode(['errormesg' => "pathNotFound."]);
         exit;
     }
-
     if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
         print json_encode(['errormesg' => "roomDoesNotExist."]);
+        exit;
+    }
+    if (!isset($_SESSION["user"])) {
+        print json_encode(['errormesg' => "userNotFound."]);
         exit;
     }
 
@@ -290,10 +294,26 @@ function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
     $stmt->bind_param('s', $_COOKIE["room"]);
     $stmt->execute();
     $result = $stmt->get_result();
-    $users = $result->fetch_all(MYSQLI_ASSOC)[0];
+    $users = $result->fetch_all(MYSQLI_ASSOC);
 
-    print json_encode($users);
+    $curPlayingUser = null;
+    for ($i = 0; $i < sizeof($users); $i++) {
+        if ((int)json_decode($_SESSION["user"])->id === $users[$i]["id"])
+            if ($i < 3)
+                $curPlayingUser = $i;
+            else
+                $curPlayingUser = -1;
+    }
 
-    /* print_r(); */
-    exit;
+    //update game status 
+    $stmt = $conn->prepare('UPDATE game_status SET player_turn_id=?, num_of_cards_played=?, value_of_cards_played=?, played_by=? WHERE room_id=?');
+    $stmt->bind_param('iisss', $users[$curPlayingUser + 1]["id"], $numOfCardsPlayed, $valueOfCardsPlayed, json_decode($_SESSION["user"])->id, $_COOKIE["room"]);
+    $stmt->execute();
+
+    //update bluff table
+    foreach ($cardsPlayed as $card) {
+        $cards_stmt = $conn->prepare('UPDATE bluff SET actions="played" WHERE id=?');
+        $cards_stmt->bind_param('s', $card);
+        $cards_stmt->execute();
+    }
 }
