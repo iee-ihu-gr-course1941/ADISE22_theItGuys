@@ -47,9 +47,9 @@ transform: rotate(180deg);
     border: 5px solid blue !important;
 }
 
-.playedCards{
-    height: 150px;
-    width: 110px;
+.playedCardsGame{
+    height: 230px;
+    width: 170px;
     border: 1px solid black;
     border-radius: .5rem;
     display: flex;
@@ -58,5 +58,8 @@ transform: rotate(180deg);
     user-select: none;
     font-size: 4rem;
     position: relative;
-    background-color: white;
+    background-image: url("./images/deckOfCards.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
 }

@@ -21,7 +21,7 @@ $(function () {
     if (room.roomStatus === "full")
         if (isOwner()) startGame();
         else getMyCards();
-
+        
     $(".deckCard").on("click", selectCards);
     $("#chooseYourBluffBtn").on("click", openBluffModal);
     $(".bluffValueBtn").on("click", submitYourBluff);

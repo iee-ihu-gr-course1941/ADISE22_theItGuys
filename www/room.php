@@ -42,6 +42,8 @@
                 ?>
             </div>
         </div>
+           
+
         <!-- emfanisi xristwn -->
         <div class="row">
             <div class="col-12">
@@ -58,8 +60,10 @@
                     <p id="userFour" class="text-light"></p>
                 </div>
             </div>
-            <div class="col-8">
-
+            <div class="col-8 d-flex align-items:center">
+                <div class="playedCardsGame m-auto" alt="">
+                    <div class="m-auto text-center" style="width:fit-content;"></div>
+                </div>
             </div>
             <div class="col-2 d-flex justify-content-center align-items-center">
                 <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
