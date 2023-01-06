@@ -46,3 +46,17 @@ transform: rotate(180deg);
 .selectedCards{
     border: 5px solid blue !important;
 }
+
+.playedCards{
+    height: 150px;
+    width: 110px;
+    border: 1px solid black;
+    border-radius: .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    font-size: 4rem;
+    position: relative;
+    background-color: white;
+}
