@@ -317,3 +317,31 @@ function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
         $cards_stmt->execute();
     }
 }
+
+function getGameInfo($method)
+{
+    if (strcmp($method, "POST") == 0) {
+        print json_encode(['errormesg' => "pathNotFound."]);
+        exit;
+    }
+    if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "roomDoesNotExist."]);
+        exit;
+    }
+    global $conn;
+    $stmt = $conn->prepare('SELECT users.name AS "played_by", num_of_cards_played, value_of_cards_played FROM game_status JOIN users ON users.id = game_status.played_by WHERE game_status.room_id=?');
+    $stmt->bind_param('s', $_COOKIE["room"]);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $lastBluffInfo = $result->fetch_all(MYSQLI_ASSOC)[0];
+
+    $stmt2 = $conn->prepare('SELECT users.name AS "playing_now" FROM game_status JOIN users ON users.id = game_status.player_turn_id WHERE game_status.room_id=?');
+    $stmt2->bind_param('s', $_COOKIE["room"]);
+    $stmt2->execute();
+    $result = $stmt2->get_result();
+    $userPlayingNow = $result->fetch_all(MYSQLI_ASSOC)[0];
+
+    $fullData = array_merge($lastBluffInfo, $userPlayingNow);
+
+    print json_encode($fullData);
+}

@@ -57,6 +57,9 @@ switch ($r = array_shift($request)) {
             case 'getGameOwner':
                 getOwnerInfo();
                 break;
+            case 'getGameInfo':
+                getGameInfo($method);
+                break;
             case 'getMyCards':
                 getMyCards($method);
                 break;
