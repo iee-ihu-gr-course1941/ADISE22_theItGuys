@@ -71,11 +71,24 @@
         <div class="row mt-3">
             <div class="col-12 bg-dark text-center" style="height: 25vh;">
                 <div id="myCardsDisplay" class="justify-content-center">
+                </div>
+                <div class="header-button-container">
+                    <div class="game-play-cards-button-container">
+                        <button id="playCards" class="btn btn-warning mt-4">Play your cards</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-12">
+                <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
+                    <div class="playedCards" class="userIcon m-auto" alt=""></div>
                 </div>
                 <button type="button" id="chooseYourBluffBtn" class="btn btn-warning mt-4">Play your cards</button>
             </div>
         </div>
+
         <!-- -->
     </div>
 
