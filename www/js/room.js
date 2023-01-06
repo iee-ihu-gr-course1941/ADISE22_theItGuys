@@ -131,5 +131,17 @@ function selectCards() {
     if (bluffCards.length < 4) {
         $(this).addClass("selectedCards");
         bluffCards.push($(this).attr("id"));
+    }  
+}
+
+function numberOfCards(){
+    return this.cards.length;
+}
+
+function playYourCards(selectCards){
+    if ($(this).hasClass("playCards")) {
+        bluffCards.splice($.inArray($(this).attr("id"), bluffCards), 1);
+        $(this).removeClass("selectedCards");
+        return;
     }
 }
