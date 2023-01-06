@@ -164,17 +164,25 @@ function getGameOwner()
 function startGame()
 {
     //people in room + other requirements
-    //playing now
     if (isset($_COOKIE["room"]) && empty($_COOKIE["room"]) || (!isset($_COOKIE["room"]))) {
         print json_encode(['errormesg' => "roomisnotavailable."]);
         exit;
     }
-
     $playersTurn = getGameOwner();
     $gameEnded = "0";
 
     global $conn;
-    $stmt = $conn->prepare('insert into game_status(player_turn_id ,room_id ,game_ended) values (?,?,?);');
+    $check = $conn->prepare('SELECT * FROM game_status WHERE room_id=?');
+    $check->bind_param('s', $_COOKIE["room"]);
+    $check->execute();
+    $result = $check->get_result();
+
+    if (!empty($result->fetch_all(MYSQLI_ASSOC))) {
+        print json_encode(['errormesg' => "Game has already started."]);
+        exit;
+    }
+
+    $stmt = $conn->prepare('INSERT INTO game_status(player_turn_id ,room_id ,game_ended) VALUES (?,?,?);');
     $stmt->bind_param('sss', $playersTurn, $_COOKIE["room"], $gameEnded);
     $stmt->execute();
 
@@ -316,4 +324,32 @@ function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
         $cards_stmt->bind_param('s', $card);
         $cards_stmt->execute();
     }
+}
+
+function getGameInfo($method)
+{
+    if (strcmp($method, "POST") == 0) {
+        print json_encode(['errormesg' => "pathNotFound."]);
+        exit;
+    }
+    if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "roomDoesNotExist."]);
+        exit;
+    }
+    global $conn;
+    $stmt = $conn->prepare('SELECT users.name AS "played_by", num_of_cards_played, value_of_cards_played FROM game_status JOIN users ON users.id = game_status.played_by WHERE game_status.room_id=?');
+    $stmt->bind_param('s', $_COOKIE["room"]);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $lastBluffInfo = $result->fetch_all(MYSQLI_ASSOC)[0];
+
+    $stmt2 = $conn->prepare('SELECT users.name AS "playing_now" FROM game_status JOIN users ON users.id = game_status.player_turn_id WHERE game_status.room_id=?');
+    $stmt2->bind_param('s', $_COOKIE["room"]);
+    $stmt2->execute();
+    $result = $stmt2->get_result();
+    $userPlayingNow = $result->fetch_all(MYSQLI_ASSOC)[0];
+
+    $fullData = array_merge($lastBluffInfo, $userPlayingNow);
+
+    print json_encode($fullData);
 }
