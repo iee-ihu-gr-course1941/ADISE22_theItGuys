@@ -152,9 +152,9 @@ function submitYourBluff() {
         success: function (response) {
             console.log(response);
             for (var i = 0; i < bluffCards.length; ++i) {
-                $( "#" + bluffCards[i] ).remove();
-                $("#chooseYourBluff").modal("toggle");
-          }
+                $("#" + bluffCards[i]).remove();
+            }
+            $("#chooseYourBluff").modal("toggle");
         },
         error: function (response) {
             console.log(response.error);
