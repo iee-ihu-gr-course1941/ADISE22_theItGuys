@@ -164,17 +164,25 @@ function getGameOwner()
 function startGame()
 {
     //people in room + other requirements
-    //playing now
     if (isset($_COOKIE["room"]) && empty($_COOKIE["room"]) || (!isset($_COOKIE["room"]))) {
         print json_encode(['errormesg' => "roomisnotavailable."]);
         exit;
     }
-
     $playersTurn = getGameOwner();
     $gameEnded = "0";
 
     global $conn;
-    $stmt = $conn->prepare('insert into game_status(player_turn_id ,room_id ,game_ended) values (?,?,?);');
+    $check = $conn->prepare('SELECT * FROM game_status WHERE room_id=?');
+    $check->bind_param('s', $_COOKIE["room"]);
+    $check->execute();
+    $result = $check->get_result();
+
+    if (!empty($result->fetch_all(MYSQLI_ASSOC))) {
+        print json_encode(['errormesg' => "Game has already started."]);
+        exit;
+    }
+
+    $stmt = $conn->prepare('INSERT INTO game_status(player_turn_id ,room_id ,game_ended) VALUES (?,?,?);');
     $stmt->bind_param('sss', $playersTurn, $_COOKIE["room"], $gameEnded);
     $stmt->execute();
 

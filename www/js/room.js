@@ -102,6 +102,7 @@ function isOwner() {
 function startGame() {
     startGameBase();
     //update everyones cards
+    getMyCards();
 }
 
 function getMyCards() {
