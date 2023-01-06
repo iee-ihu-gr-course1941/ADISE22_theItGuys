@@ -139,10 +139,6 @@ function selectCards() {
 function openBluffModal() {
     if (bluffCards.length === 0) alert("you must select at least one card");
     else $("#chooseYourBluff").modal("toggle");
-        var i;
-            for (i = 0; i < bluffCards.length; ++i) {
-                $( "#bluffcards" + "#i" ).remove();
-          }
 }
 
 function submitYourBluff() {
@@ -155,6 +151,10 @@ function submitYourBluff() {
         },
         success: function (response) {
             console.log(response);
+            for (var i = 0; i < bluffCards.length; ++i) {
+                $( "#" + bluffCards[i] ).remove();
+                $("#chooseYourBluff").modal("toggle");
+          }
         },
         error: function (response) {
             console.log(response.error);
