@@ -60,10 +60,12 @@
                     <p id="userFour" class="text-light"></p>
                 </div>
             </div>
-            <div class="col-8 d-flex align-items:center">
+            <div class="col-8 d-flex flex-column align-items-center text-center">
                 <div class="playedCardsGame m-auto" alt="">
                     <div class="m-auto text-center" style="width:fit-content;"></div>
                 </div>
+                <h3 id="bluffPlayedByHeader" class="text-light"></h3>
+                <h3 id="bluffInfoHeader" class="text-light"></h3>
             </div>
             <div class="col-2 d-flex justify-content-center align-items-center">
                 <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">

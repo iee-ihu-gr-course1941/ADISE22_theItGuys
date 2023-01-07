@@ -18,10 +18,12 @@ $(function () {
         console.log(otherUsers);
     }
 
-    if (room.roomStatus === "full")
+    if (room.roomStatus === "full"){
         if (isOwner()) startGame();
         else getMyCards();
         
+        var gameStatus = setInterval(getGameInfo, 4000);
+    }
     $(".deckCard").on("click", selectCards);
     $("#chooseYourBluffBtn").on("click", openBluffModal);
     $(".bluffValueBtn").on("click", submitYourBluff);
@@ -156,6 +158,22 @@ function submitYourBluff() {
                 $("#" + bluffCards[i]).remove();
             }
             $("#chooseYourBluff").modal("toggle");
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
+}
+
+function getGameInfo(){
+    $.ajax({
+        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getGameInfo",
+        type: "GET",
+        success: function (response) {
+            var obj = JSON.parse(response)
+            $("#bluffPlayedByHeader").text(obj.played_by + "  played...:");
+            $("#bluffInfoHeader").text(obj.num_of_cards_played + "  x  " + obj.value_of_cards_played);
+            console.log(obj);
         },
         error: function (response) {
             console.log(response.error);
