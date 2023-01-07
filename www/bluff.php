@@ -72,6 +72,15 @@ switch ($r = array_shift($request)) {
             case 'getCalledBluffCards':
                 getCardsFromCalledBluff($method, $_REQUEST["userToCollectBank"]);
                 break;
+            case 'passOnBluff':
+                passAction($method);
+                break;
+            case 'resetPasses':
+                resetGamePasses($method);
+                break;
+            case 'addCardsToBank':
+                addCardsToBank($method);
+                break;
             default:
                 header("HTTP/1.1 404 Not Found");
                 break;

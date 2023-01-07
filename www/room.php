@@ -76,6 +76,7 @@
                 </div>
                 <button type="button" id="chooseYourBluffBtn" class="btn btn-warning mt-4">Play your cards</button>
                 <button type="button" id="callBluffBtn" class="btn btn-danger mt-4">Call bluff</button>
+                <button type="button" id="passBtn" class="btn btn-info mt-4">Pass</button>
             </div>
         </div>
         <!-- -->

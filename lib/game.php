@@ -337,7 +337,7 @@ function getGameInfo($method)
         exit;
     }
     global $conn;
-    $stmt = $conn->prepare('SELECT users.name AS "played_by", num_of_cards_played, value_of_cards_played FROM game_status JOIN users ON users.id = game_status.played_by WHERE game_status.room_id=?');
+    $stmt = $conn->prepare('SELECT users.name AS "played_by", num_of_cards_played, value_of_cards_played, passes FROM game_status JOIN users ON users.id = game_status.played_by WHERE game_status.room_id=?');
     $stmt->bind_param('s', $_COOKIE["room"]);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -425,4 +425,95 @@ function getCardsFromCalledBluff($method, $userToCollectBank)
     $CleanCardsStmt->execute();
 
     print json_encode(["success" => "User " . $userToCollectBank . " collected the cards"]);
+}
+
+function passAction($method)
+{
+    session_start();
+    if (strcmp($method, "POST") == 0) {
+        print json_encode(['errormesg' => "Path not found."]);
+        exit;
+    }
+    if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "Room does not exist."]);
+        exit;
+    }
+    if (!isset($_SESSION["user"])) {
+        print json_encode(['errormesg' => "User not found."]);
+        exit;
+    }
+    global $conn;
+
+    $stmt = $conn->prepare('select id from users where room_id=? order by log_in_time asc');
+    $stmt->bind_param('s', $_COOKIE["room"]);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $users = $result->fetch_all(MYSQLI_ASSOC);
+
+    $curPlayingUser = null;
+    for ($i = 0; $i < sizeof($users); $i++) {
+        if ((int)json_decode($_SESSION["user"])->id === $users[$i]["id"])
+            if ($i < 3)
+                $curPlayingUser = $i;
+            else
+                $curPlayingUser = -1;
+    }
+
+    $check = $conn->prepare('SELECT passes FROM game_status WHERE room_id=?');
+    $check->bind_param('s', $_COOKIE["room"]);
+    $check->execute();
+    $result = $check->get_result();
+    $passCount = $result->fetch_all(MYSQLI_ASSOC)[0]["passes"];
+
+    if ($passCount == 3) {
+        print json_encode("Pass can not be submitted you can only play!");
+        exit;
+        /* $updatePass = $conn->prepare('UPDATE game_status SET player_turn_id=?, passes=0 WHERE room_id=?');
+        $updatePass->bind_param('is', $users[$curPlayingUser + 1]["id"], $_COOKIE["room"]);
+        $updatePass->execute(); */
+    }
+    if ($passCount < 3) {
+        $updatePass = $conn->prepare('UPDATE game_status SET player_turn_id=?, passes=passes+1 WHERE room_id=?');
+        $updatePass->bind_param('is', $users[$curPlayingUser + 1]["id"], $_COOKIE["room"]);
+        $updatePass->execute();
+    }
+
+    var_dump($passCount);
+    exit;
+}
+
+function resetGamePasses($method)
+{
+    if (strcmp($method, "GET") == 0) {
+        print json_encode(['errormesg' => "Path not found."]);
+        exit;
+    }
+    if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "Room does not exist."]);
+        exit;
+    }
+
+    global $conn;
+
+    $clearPass = $conn->prepare('UPDATE game_status SET passes=0 WHERE room_id=?');
+    $clearPass->bind_param('s', $_COOKIE["room"]);
+    $clearPass->execute();
+}
+
+function addCardsToBank($method)
+{
+    if (strcmp($method, "GET") == 0) {
+        print json_encode(['errormesg' => "Path not found."]);
+        exit;
+    }
+    if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "Room does not exist."]);
+        exit;
+    }
+
+    global $conn;
+
+    $clearPass = $conn->prepare('UPDATE bluff SET actions="bank", actions_timestamp=NULL WHERE actions="played" AND room_id=?');
+    $clearPass->bind_param('s', $_COOKIE["room"]);
+    $clearPass->execute();
 }

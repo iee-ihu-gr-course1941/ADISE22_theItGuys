@@ -4,6 +4,7 @@ var room = { name: null, users_online: null, roomStatus: null };
 var otherUsers = [];
 var myCards;
 var bluffCards = [];
+var resetPasses = false;
 
 $(function () {
     //fill room object
@@ -25,6 +26,7 @@ $(function () {
     $("#chooseYourBluffBtn").on("click", openBluffModal);
     $(".bluffValueBtn").on("click", submitYourBluff);
     $("#callBluffBtn").on("click", callBluff);
+    $("#passBtn").on("click", passAction);
 });
 
 function get_room_info() {
@@ -156,6 +158,8 @@ function submitYourBluff() {
                 $("#" + bluffCards[i]).remove();
             }
             $("#chooseYourBluff").modal("toggle");
+            resetGamePasses();
+            addCartsToBank();
         },
         error: function (response) {
             console.log(response.error);
@@ -174,10 +178,17 @@ function getGameInfo() {
             if (obj.playing_now === $("#playerUsername").text()) {
                 $("#chooseYourBluffBtn").prop("disabled", false);
                 $("#callBluffBtn").prop("disabled", false);
+                if (obj.passes < 3) $("#passBtn").prop("disabled", false);
+                else {
+                    $("#passBtn").prop("disabled", true);
+                    resetPasses = true;
+                }
             } else {
                 $("#chooseYourBluffBtn").prop("disabled", true);
                 $("#callBluffBtn").prop("disabled", true);
+                $("#passBtn").prop("disabled", true);
             }
+
             console.log(obj);
         },
         error: function (response) {
@@ -191,15 +202,15 @@ function callBluff() {
         url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/callBluff",
         type: "GET",
         success: function (response) {
+            $("#callBluffBtn").prop("disabled", true);
             var obj = JSON.parse(response);
-            $(".playedCardsGame").css('display', 'none')
+            $(".playedCardsGame").css("display", "none");
             $.each(obj.cards, function (index, value) {
                 if (value.card_style == "♦" || value.card_style == "♥") $("#gameDeck").append('<div class="deckCard red showBluffCardsOnCall" data-value="' + value.card_number + value.card_style + '">' + value.card_style + "</div>");
                 else $("#gameDeck").append('<div class="deckCard black showBluffCardsOnCall" data-value="' + value.card_number + value.card_style + '">' + value.card_style + "</div>");
             });
-            if (obj.result == true){
-                collectBluffCards(obj.playerForBank)
-            }
+            collectBluffCards(obj.playerForBank);
+            resetGamePasses();
         },
         error: function (response) {
             console.log(response.error);
@@ -212,11 +223,50 @@ function collectBluffCards(playerToCollect) {
         url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getCalledBluffCards",
         type: "POST",
         data: {
-            userToCollectBank: playerToCollect
+            userToCollectBank: playerToCollect,
         },
         success: function (response) {
-            $(".showBluffCardsOnCall").delay(3000).remove()
-            $(".playedCardsGame").css('display', 'block')
+            $(".showBluffCardsOnCall").delay(3000).remove();
+            $(".playedCardsGame").css("display", "block");
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
+}
+
+function passAction() {
+    $.ajax({
+        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/passOnBluff",
+        type: "GET",
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
+}
+
+function resetGamePasses() {
+    $.ajax({
+        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/resetPasses",
+        type: "POST",
+        success: function (response) {
+            resetPasses = false;
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
+}
+
+function addCartsToBank() {
+    $.ajax({
+        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/addCardsToBank",
+        type: "POST",
+        success: function (response) {
+            //take bank num
         },
         error: function (response) {
             console.log(response.error);
