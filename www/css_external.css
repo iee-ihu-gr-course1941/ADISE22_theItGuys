@@ -63,3 +63,9 @@ transform: rotate(180deg);
     background-repeat: no-repeat;
     background-position: 50% 50%;
 }
+
+.bg-image {
+    background-image: url("room.jpg");
+    height: 100vh;
+    background-size: cover;
+}

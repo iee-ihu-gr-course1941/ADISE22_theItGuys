@@ -17,16 +17,13 @@
 <body>
     <?php
     session_start();
-
     if (isset($_SESSION['user'])) {
         $json = json_decode($_SESSION['user']);
         $name =  (string)$json->name;
     }
-
     if (isset($_COOKIE["room"])) {
         $room = $_COOKIE["room"];
     }
-
     ?>
 
     <div class="container-fluid bg-image">
@@ -37,13 +34,11 @@
 
                 <?php
                 if (isset($_SESSION['user'])) {
-                    echo '<h5>Username:  ' . $name . '</h5>';
+                    echo '<h5 id="playerUsername">Username:  ' . $name . '</h5>';
                 }
                 ?>
             </div>
         </div>
-           
-
         <!-- emfanisi xristwn -->
         <div class="row">
             <div class="col-12">
@@ -76,10 +71,11 @@
         </div>
         <div class="row mt-3">
             <div class="col-12 bg-dark text-center" style="height: 25vh;">
-                <div id="myCardsDisplay" class="justify-content-center">
+                <div id="myCardsDisplay" class="d-flex justify-content-center">
 
                 </div>
                 <button type="button" id="chooseYourBluffBtn" class="btn btn-warning mt-4">Play your cards</button>
+                <button type="button" id="callBluffBtn" class="btn btn-danger mt-4">Call bluff</button>
             </div>
         </div>
         <!-- -->
@@ -111,21 +107,6 @@
             </div>
         </div>
     </div>
-
-    <style>
-        .bg-image {
-            background-image: url("room.jpg");
-            height: 100vh;
-            background-size: cover;
-        }
-
-        #myCardsDisplay {
-            display: flex;
-        }
-    </style>
-
-
-
 </body>
 
 </html>

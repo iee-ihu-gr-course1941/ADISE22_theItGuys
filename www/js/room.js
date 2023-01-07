@@ -9,19 +9,16 @@ $(function () {
     //fill room object
     get_room_info();
 
-    //room id
     roomID = $("#awesome").val();
 
     if (room.users_online > 1) {
         getOtherUsersInRoom();
-        //show their names
-        console.log(otherUsers);
     }
 
-    if (room.roomStatus === "full"){
+    if (room.roomStatus === "full") {
         if (isOwner()) startGame();
         else getMyCards();
-        
+
         var gameStatus = setInterval(getGameInfo, 4000);
     }
     $(".deckCard").on("click", selectCards);
@@ -165,14 +162,21 @@ function submitYourBluff() {
     });
 }
 
-function getGameInfo(){
+function getGameInfo() {
     $.ajax({
         url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getGameInfo",
         type: "GET",
         success: function (response) {
-            var obj = JSON.parse(response)
+            var obj = JSON.parse(response);
             $("#bluffPlayedByHeader").text(obj.played_by + "  played...:");
             $("#bluffInfoHeader").text(obj.num_of_cards_played + "  x  " + obj.value_of_cards_played);
+            if (obj.playing_now === $("#playerUsername").text()) {
+                $("#chooseYourBluffBtn").prop("disabled", false);
+                $("#callBluffBtn").prop("disabled", false);
+            } else {
+                $("#chooseYourBluffBtn").prop("disabled", true);
+                $("#callBluffBtn").prop("disabled", true);
+            }
             console.log(obj);
         },
         error: function (response) {
