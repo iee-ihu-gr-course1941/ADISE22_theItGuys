@@ -66,6 +66,12 @@ switch ($r = array_shift($request)) {
             case 'playYourBluff':
                 playMyBluff($method, $_REQUEST["valueOfCardsPlayed"], $_REQUEST["cardsPlayed"]);
                 break;
+            case 'callBluff':
+                callBluff($method);
+                break;
+            case 'getCalledBluffCards':
+                getCardsFromCalledBluff($method, $_REQUEST["userToCollectBank"]);
+                break;
             default:
                 header("HTTP/1.1 404 Not Found");
                 break;

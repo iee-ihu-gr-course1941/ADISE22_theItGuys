@@ -320,7 +320,7 @@ function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
 
     //update bluff table
     foreach ($cardsPlayed as $card) {
-        $cards_stmt = $conn->prepare('UPDATE bluff SET actions="played" WHERE id=?');
+        $cards_stmt = $conn->prepare('UPDATE bluff SET actions_timestamp=now(), actions="played" WHERE id=?');
         $cards_stmt->bind_param('s', $card);
         $cards_stmt->execute();
     }
@@ -352,4 +352,71 @@ function getGameInfo($method)
     $fullData = array_merge($lastBluffInfo, $userPlayingNow);
 
     print json_encode($fullData);
+}
+
+function callBluff($method)
+{
+    session_start();
+    if (strcmp($method, "POST") == 0) {
+        print json_encode(['errormesg' => "Path Not Found."]);
+        exit;
+    }
+    if (!isset($_SESSION["user"])) {
+        print json_encode(['errormesg' => "userNotFound."]);
+        exit;
+    }
+    if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "Room does not exist."]);
+        exit;
+    }
+
+    global $conn;
+    $stmt = $conn->prepare('SELECT played_by, num_of_cards_played, value_of_cards_played FROM game_status WHERE game_status.room_id=?');
+    $stmt->bind_param('s', $_COOKIE["room"]);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $lastBluffInfo = $result->fetch_all(MYSQLI_ASSOC)[0];
+
+    $cardsStmt = $conn->prepare('SELECT card_number FROM bluff WHERE actions="played" AND room_id=? AND user_id=? ORDER BY actions_timestamp');
+    $cardsStmt->bind_param('si', $_COOKIE["room"], $lastBluffInfo["played_by"]);
+    $cardsStmt->execute();
+    $result = $cardsStmt->get_result();
+    $playedCards = $result->fetch_all(MYSQLI_ASSOC);
+
+    $hasBluffed = false;
+    foreach ($playedCards as $card) {
+        if (strcmp($card["card_number"], $lastBluffInfo["value_of_cards_played"]) != 0) {
+            $hasBluffed = true;
+            break;
+        }
+    }
+
+    if ($result)
+        print json_encode(["result" => $hasBluffed, "cards" => $playedCards, "playerForBank" => $lastBluffInfo["played_by"]]);
+
+    if (!$result)
+        print json_encode(["result" => $hasBluffed, "cards" => $playedCards, "playerForBank" => (int)json_decode($_SESSION["user"])->id]);
+}
+
+function getCardsFromCalledBluff($method, $userToCollectBank)
+{
+    if (strcmp($method, "GET") == 0) {
+        print json_encode(['errormesg' => "Path Not Found."]);
+        exit;
+    }
+    if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "Room does not exist."]);
+        exit;
+    }
+    global $conn;
+
+    $stmt = $conn->prepare('UPDATE bluff SET user_id=? WHERE (actions="bank" OR actions="played") AND room_id=?');
+    $stmt->bind_param('ss', $userToCollectBank, $_COOKIE["room"]);
+    $stmt->execute();
+
+    $CleanCardsStmt = $conn->prepare('UPDATE bluff SET actions=NULL, actions_timestamp=NULL WHERE user_id=? AND room_id=?');
+    $CleanCardsStmt->bind_param('ss', $userToCollectBank, $_COOKIE["room"]);
+    $CleanCardsStmt->execute();
+
+    print json_encode(["success" => "User " . $userToCollectBank . " collected the cards"]);
 }
