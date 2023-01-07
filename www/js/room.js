@@ -191,8 +191,8 @@ function getGameInfo() {
                 $("#callBluffBtn").prop("disabled", true);
                 $("#passBtn").prop("disabled", true);
             }
-
-            //console.log(obj);
+            showCurrentUserPlaying(obj.playing_now);
+            console.log(obj);
         },
         error: function (response) {
             console.log(response.error);
@@ -275,4 +275,14 @@ function addCartsToBank() {
             console.log(response.error);
         },
     });
+}
+
+function showCurrentUserPlaying(name) {
+    if ($("div").hasClass("currentPlayingUserDisplay")) $("div").removeClass("currentPlayingUserDisplay");
+    if ($("#myCardsDisplay").hasClass("loggedInUsersTurn")) $("#myCardsDisplay").removeClass("loggedInUsersTurn");
+
+    if ($("#userTwo").text() === name) $("#userTwo").parent().addClass("currentPlayingUserDisplay");
+    if ($("#userThree").text() === name) $("#userThree").parent().addClass("currentPlayingUserDisplay");
+    if ($("#userFour").text() === name) $("#userFour").parent().addClass("currentPlayingUserDisplay");
+    if ($("#playerUsername").text() === name) $("#myCardsDisplay").addClass("loggedInUsersTurn");
 }

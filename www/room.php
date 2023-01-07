@@ -43,16 +43,20 @@
         <div class="row">
             <div class="col-12">
                 <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
-                    <img src="userImg/user_icon_red.png" class="userIcon m-auto" alt="">
-                    <p id="userThree" class="text-light"></p>
+                    <div>
+                        <img src="userImg/user_icon_red.png" class="userIcon m-auto" alt="">
+                        <p id="userThree" class="text-light"></p>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row" style="height:60vh">
             <div class="col-2 d-flex justify-content-center align-items-center">
                 <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
-                    <img src="userImg/user_icon_yellow.png" class="userIcon m-auto" alt="">
-                    <p id="userFour" class="text-light"></p>
+                    <div>
+                        <img src="userImg/user_icon_yellow.png" class="userIcon m-auto" alt="">
+                        <p id="userFour" class="text-light otherUsersDispl"></p>
+                    </div>
                 </div>
             </div>
             <div class="col-8 d-flex flex-column align-items-center text-center">
@@ -64,8 +68,10 @@
             </div>
             <div class="col-2 d-flex justify-content-center align-items-center">
                 <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
-                    <img src="userImg/user_icon_white.png" class="userIcon m-auto" alt="">
-                    <p id="userTwo" class="text-light"></p>
+                    <div>
+                        <img src="userImg/user_icon_white.png" class="userIcon m-auto" alt="">
+                        <p id="userTwo" class="text-light otherUsersDispl"></p>
+                    </div>
                 </div>
             </div>
         </div>
