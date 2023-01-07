@@ -34,7 +34,7 @@
 
                 <?php
                 if (isset($_SESSION['user'])) {
-                    echo '<h5 id="playerUsername">Username:  ' . $name . '</h5>';
+                    echo '<h5>Username:  <span id="playerUsername">' . $name . '</span></h5>';
                 }
                 ?>
             </div>
