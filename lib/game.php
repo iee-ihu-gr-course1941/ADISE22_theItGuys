@@ -391,10 +391,16 @@ function callBluff($method)
         }
     }
 
-    if ($result)
+    if (!$hasBluffed) {
+        $cards_stmt = $conn->prepare('UPDATE game_status SET player_turn_id=? WHERE room_id=?');
+        $cards_stmt->bind_param('is', $lastBluffInfo["played_by"], $_COOKIE["room"]);
+        $cards_stmt->execute();
+    }
+
+    if ($hasBluffed)
         print json_encode(["result" => $hasBluffed, "cards" => $playedCards, "playerForBank" => $lastBluffInfo["played_by"]]);
 
-    if (!$result)
+    if (!$hasBluffed)
         print json_encode(["result" => $hasBluffed, "cards" => $playedCards, "playerForBank" => (int)json_decode($_SESSION["user"])->id]);
 }
 
