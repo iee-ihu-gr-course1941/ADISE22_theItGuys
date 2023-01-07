@@ -58,7 +58,10 @@ function getOtherUsersInRoom() {
             roomId: roomID,
         },
         success: function (response) {
+            console.log("otherUsers");
+            console.log(response);
             otherUsers = JSON.parse(response);
+            console.log(otherUsers);
             $("#userTwo").text(otherUsers[1].name);
             $("#userThree").text(otherUsers[2].name);
             $("#userFour").text(otherUsers[3].name);
@@ -189,7 +192,7 @@ function getGameInfo() {
                 $("#passBtn").prop("disabled", true);
             }
 
-            console.log(obj);
+            //console.log(obj);
         },
         error: function (response) {
             console.log(response.error);

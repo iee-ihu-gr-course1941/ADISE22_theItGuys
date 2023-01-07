@@ -99,14 +99,32 @@ function getGameStatus($id)
 
 function getOnlinePlayersByRoomId($roomId)
 {
+    session_start();
+    if (!isset($_SESSION["user"])) {
+        print json_encode(['errormesg' => "userNotFound."]);
+        exit;
+    }
+
     global $conn;
 
     $stmt = $conn->prepare('select id,name from users where room_id=? order by log_in_time asc');
     $stmt->bind_param('s', $roomId);
     $stmt->execute();
     $result = $stmt->get_result();
+    $usersInRoom = $result->fetch_all(MYSQLI_ASSOC);
 
-    print json_encode($result->fetch_all(MYSQLI_ASSOC));
+    $curUserPos = -1;
+    for ($i = 0; $i < sizeof($usersInRoom); $i++) {
+        if ((int)json_decode($_SESSION["user"])->id == $usersInRoom[$i]["id"])
+            $curUserPos = $i;
+    }
+    if ($curUserPos != -1 && $curUserPos != 0) {
+        $curUser = $usersInRoom[$curUserPos];
+        unset($usersInRoom[$curUserPos]);
+        array_unshift($usersInRoom, $curUser);
+    }
+
+    print json_encode($usersInRoom);
 }
 
 
