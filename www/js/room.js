@@ -24,6 +24,7 @@ $(function () {
     $(".deckCard").on("click", selectCards);
     $("#chooseYourBluffBtn").on("click", openBluffModal);
     $(".bluffValueBtn").on("click", submitYourBluff);
+    $("#callBluffBtn").on("click", callBluff);
 });
 
 function get_room_info() {
@@ -178,6 +179,44 @@ function getGameInfo() {
                 $("#callBluffBtn").prop("disabled", true);
             }
             console.log(obj);
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
+}
+
+function callBluff() {
+    $.ajax({
+        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/callBluff",
+        type: "GET",
+        success: function (response) {
+            var obj = JSON.parse(response);
+            $(".playedCardsGame").css('display', 'none')
+            $.each(obj.cards, function (index, value) {
+                if (value.card_style == "♦" || value.card_style == "♥") $("#gameDeck").append('<div class="deckCard red showBluffCardsOnCall" data-value="' + value.card_number + value.card_style + '">' + value.card_style + "</div>");
+                else $("#gameDeck").append('<div class="deckCard black showBluffCardsOnCall" data-value="' + value.card_number + value.card_style + '">' + value.card_style + "</div>");
+            });
+            if (obj.result == true){
+                collectBluffCards(obj.playerForBank)
+            }
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
+}
+
+function collectBluffCards(playerToCollect) {
+    $.ajax({
+        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getCalledBluffCards",
+        type: "POST",
+        data: {
+            userToCollectBank: playerToCollect
+        },
+        success: function (response) {
+            $(".showBluffCardsOnCall").delay(3000).remove()
+            $(".playedCardsGame").css('display', 'block')
         },
         error: function (response) {
             console.log(response.error);

@@ -377,7 +377,7 @@ function callBluff($method)
     $result = $stmt->get_result();
     $lastBluffInfo = $result->fetch_all(MYSQLI_ASSOC)[0];
 
-    $cardsStmt = $conn->prepare('SELECT card_number FROM bluff WHERE actions="played" AND room_id=? AND user_id=? ORDER BY actions_timestamp');
+    $cardsStmt = $conn->prepare('SELECT card_number, card_style FROM bluff WHERE actions="played" AND room_id=? AND user_id=? ORDER BY actions_timestamp');
     $cardsStmt->bind_param('si', $_COOKIE["room"], $lastBluffInfo["played_by"]);
     $cardsStmt->execute();
     $result = $cardsStmt->get_result();

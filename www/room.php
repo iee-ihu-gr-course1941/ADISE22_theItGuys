@@ -56,8 +56,8 @@
                 </div>
             </div>
             <div class="col-8 d-flex flex-column align-items-center text-center">
-                <div class="playedCardsGame m-auto" alt="">
-                    <div class="m-auto text-center" style="width:fit-content;"></div>
+                <div class="m-auto d-flex" id="gameDeck">
+                    <div class="playedCardsGame m-auto text-center"></div>
                 </div>
                 <h3 id="bluffPlayedByHeader" class="text-light"></h3>
                 <h3 id="bluffInfoHeader" class="text-light"></h3>
