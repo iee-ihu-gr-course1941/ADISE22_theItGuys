@@ -31,7 +31,7 @@ if (isset($_SESSION['user'])) {
     <div class="container-fluid bg-image">
         <div id="showAvaibleRooms">
             <div class="row">
-                <div class="col-md-6 col-sm-1 col-lg-12">
+                <div class="col-12">
                     <div class="p-3 mb-2 bg-info text-white">
                         <span class="d-flex justify-content-between">
                             <span class="d-flex gap-1">
@@ -109,7 +109,7 @@ if (isset($_SESSION['user'])) {
                     var count = 0;
                     //console.log(response.records.length);
                     for (var i = 1; i <= response.records.length; i++) {
-                        if (i == 1 || (i - 1) % 3 == 0) $("#showAvaibleRooms").append('<div class="row"></div>');
+                        if (i == 1 || (i - 1) % 4 == 0) $("#showAvaibleRooms").append('<div class="row d-flex gap-3"></div>');
                         //get last row of page
                         $(".row:last-child").append('<a style="width:fit-content" href="http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/' + response.records[i - 1].id + '" ><div class="box"><h3 class="boxTitle"><h3 style="color:white;text-align:center;">' + response.records[i - 1].name + "</h3></div></a>");
                     }
