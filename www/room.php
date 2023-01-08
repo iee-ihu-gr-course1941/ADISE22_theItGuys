@@ -40,7 +40,7 @@
             </div>
         </div>
         <!-- emfanisi xristwn -->
-        <div class="row">
+        <div class="row" id="gameTopRow">
             <div class="col-12">
                 <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
                     <div>
@@ -50,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="height:60vh">
+        <div class="row" style="height:60vh" id="gameCenterRow">
             <div class="col-2 d-flex justify-content-center align-items-center">
                 <div class="m-auto d-flex flex-column text-center" style="width:fit-content;">
                     <div>
@@ -75,10 +75,9 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-3">
+        <div class="row mt-3" id="actionRow">
             <div class="col-12 bg-dark text-center" style="height: 25vh;">
                 <div id="myCardsDisplay" class="d-flex justify-content-center">
-
                 </div>
                 <button type="button" id="chooseYourBluffBtn" class="btn btn-warning mt-4">Play your cards</button>
                 <button type="button" id="callBluffBtn" class="btn btn-danger mt-4">Call bluff</button>
@@ -87,7 +86,6 @@
         </div>
         <!-- -->
     </div>
-
     <!-- Modal -->
     <div class="modal fade modal-lg" id="chooseYourBluff" tabindex="-1" aria-labelledby="chooseYourBluffLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -110,6 +108,21 @@
                     <button type="button" class="btn btn-info mt-1 ml-1 bluffValueBtn">J</button>
                     <button type="button" class="btn btn-secondary mt-1 ml-1 bluffValueBtn">Q</button>
                     <button type="button" class="btn btn-info mt-1 ml-1 bluffValueBtn">K</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Winner Modal -->
+    <div class="modal fade modal-lg" id="showWinnerModal" tabindex="-1" aria-labelledby="showWinnerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="showWinnerModalLabel">Game has ended</h5>
+                </div>
+                <div class="modal-body text-center">
+                    <h3 id="announceWinnerHeader"></h3>
+                    <button class="btn btn-success mt-2" id="goHomeAfterGame">Return Home</button>
                 </div>
             </div>
         </div>

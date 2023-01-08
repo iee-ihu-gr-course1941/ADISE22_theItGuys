@@ -5,6 +5,7 @@ var otherUsers = [];
 var myCards;
 var bluffCards = [];
 var resetPasses = false;
+var isWinnerAnnounced = false;
 
 $(function () {
     //fill room object
@@ -27,6 +28,7 @@ $(function () {
     $(".bluffValueBtn").on("click", submitYourBluff);
     $("#callBluffBtn").on("click", callBluff);
     $("#passBtn").on("click", passAction);
+    $("#goHomeAfterGame").on("click", returnHomeAfterGameIsFinished);
 });
 
 function get_room_info() {
@@ -39,7 +41,7 @@ function get_room_info() {
         },
         success: function (response) {
             var obj = jQuery.parseJSON(response);
-
+            console.log(obj); //handle error
             $("#roomTitle").append(obj.name);
             room.name = obj.name;
             room.users_online = obj.users_online;
@@ -91,7 +93,6 @@ function isOwner() {
         async: false,
         success: function (response) {
             if (response === "true") isOwner = true;
-            console.log(response);
         },
         error: function (response) {
             console.log(response.error);
@@ -103,7 +104,6 @@ function isOwner() {
 
 function startGame() {
     startGameBase();
-    //update everyones cards
     getMyCards();
 }
 
@@ -152,14 +152,14 @@ function submitYourBluff() {
             valueOfCardsPlayed: $(this).text(),
             cardsPlayed: bluffCards,
         },
-        success: function (response) {
-            console.log(response);
+        success: function () {
             for (var i = 0; i < bluffCards.length; ++i) {
                 $("#" + bluffCards[i]).remove();
             }
             $("#chooseYourBluff").modal("toggle");
             resetGamePasses();
             addCartsToBank();
+            bluffCards = [];
         },
         error: function (response) {
             console.log(response.error);
@@ -172,12 +172,21 @@ function getGameInfo() {
         url: "bluff.php/game/getGameInfo",
         type: "GET",
         success: function (response) {
+            if (response === "") return;
             var obj = JSON.parse(response);
-            $("#bluffPlayedByHeader").text(obj.played_by + "  played...:");
-            $("#bluffInfoHeader").text(obj.num_of_cards_played + "  x  " + obj.value_of_cards_played);
+            if (obj.first_winner_id != null) {
+                if (isWinnerAnnounced) return;
+                showWinner();
+                return;
+            }
+            if (obj.played_by != null && obj.num_of_cards_played != null) {
+                $("#bluffPlayedByHeader").text(obj.played_by + "  played...:");
+                $("#bluffInfoHeader").text(obj.num_of_cards_played + "  x  " + obj.value_of_cards_played);
+            }
             if (obj.playing_now === $("#playerUsername").text()) {
                 $("#chooseYourBluffBtn").prop("disabled", false);
-                $("#callBluffBtn").prop("disabled", false);
+                if (obj.played_by == null && obj.num_of_cards_played == null) $("#callBluffBtn").prop("disabled", true);
+                else $("#callBluffBtn").prop("disabled", false);
                 if (obj.passes < 3) $("#passBtn").prop("disabled", false);
                 else {
                     $("#passBtn").prop("disabled", true);
@@ -189,7 +198,6 @@ function getGameInfo() {
                 $("#passBtn").prop("disabled", true);
             }
             showCurrentUserPlaying(obj.playing_now);
-            //console.log(obj);
         },
         error: function (response) {
             console.log(response.error);
@@ -211,6 +219,9 @@ function callBluff() {
             });
             collectBluffCards(obj.playerForBank);
             resetGamePasses();
+            $("#myCardsDisplay").empty();
+            getMyCards();
+            bluffCards = [];
         },
         error: function (response) {
             console.log(response.error);
@@ -228,6 +239,8 @@ function collectBluffCards(playerToCollect) {
         success: function (response) {
             $(".showBluffCardsOnCall").delay(3000).remove();
             $(".playedCardsGame").css("display", "block");
+            $("#myCardsDisplay").empty();
+            getMyCards();
         },
         error: function (response) {
             console.log(response.error);
@@ -252,7 +265,7 @@ function resetGamePasses() {
     $.ajax({
         url: "bluff.php/game/resetPasses",
         type: "POST",
-        success: function (response) {
+        success: function () {
             resetPasses = false;
         },
         error: function (response) {
@@ -282,4 +295,37 @@ function showCurrentUserPlaying(name) {
     if ($("#userThree").text() === name) $("#userThree").parent().addClass("currentPlayingUserDisplay");
     if ($("#userFour").text() === name) $("#userFour").parent().addClass("currentPlayingUserDisplay");
     if ($("#playerUsername").text() === name) $("#myCardsDisplay").addClass("loggedInUsersTurn");
+}
+
+function showWinner() {
+    $.ajax({
+        url: "bluff.php/game/getWinner",
+        type: "POST",
+        success: function (response) {
+            var winnerObj = JSON.parse(response);
+            isWinnerAnnounced = true;
+            $("#actionRow").css("display", "none");
+            $("#gameCenterRow").css("display", "none");
+            $("#gameTopRow").css("display", "none");
+            $("#showWinnerModal").modal({ backdrop: "static", keyboard: false });
+            $("#showWinnerModal").modal("toggle");
+            $("#announceWinnerHeader").text("🎉 Congratulations " + winnerObj.winner + " you won the game!! 🎉🥳");
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
+}
+
+function returnHomeAfterGameIsFinished() {
+    $.ajax({
+        url: "bluff.php/game/restoreRoom",
+        type: "POST",
+        success: function () {
+            location.href = "http://127.0.0.1/ADISE22_theItGuys/www/";
+        },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
 }
