@@ -45,7 +45,7 @@ function get_room_info() {
         success: function (response) {
             var obj = jQuery.parseJSON(response);
             if (obj.hasOwnProperty("errormesg")) {
-                alert(obj.errormesg);
+                responseErrorAlert(obj.errormesg);
                 return;
             }
             $("#roomTitle").text(obj.name);
@@ -76,7 +76,7 @@ function getOtherUsersInRoom() {
             $("#userFour").text(otherUsers[3].name);
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -87,10 +87,14 @@ function startGameBase() {
         type: "GET",
         async: false,
         success: function (response) {
-            console.log(response);
+            var obj = JSON.parse(response);
+            if (obj.hasOwnProperty("errormesg")) {
+                responseErrorAlert(obj.errormesg);
+                return;
+            }
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -105,7 +109,7 @@ function isOwner() {
             if (response === "true") isOwner = true;
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 
@@ -150,7 +154,7 @@ function selectCards() {
 }
 
 function openBluffModal() {
-    if (bluffCards.length === 0) alert("you must select at least one card");
+    if (bluffCards.length === 0) responseErrorAlert("you must select at least one card");
     else $("#chooseYourBluff").modal("toggle");
 }
 
@@ -172,7 +176,7 @@ function submitYourBluff() {
             bluffCards = [];
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -185,6 +189,10 @@ function getGameInfo() {
         success: function (response) {
             if (response === "") return;
             var obj = JSON.parse(response);
+            if (obj.hasOwnProperty("errormesg")) {
+                responseErrorAlert(obj.errormesg);
+                return;
+            }
             if (obj.first_winner_id != null) {
                 if (isWinnerAnnounced) return;
                 showWinner();
@@ -211,7 +219,7 @@ function getGameInfo() {
             showCurrentUserPlaying(obj.playing_now);
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -223,7 +231,10 @@ function callBluff() {
         success: function (response) {
             $("#callBluffBtn").prop("disabled", true);
             var obj = JSON.parse(response);
-            console.log(obj);
+            if (obj.hasOwnProperty("errormesg")) {
+                responseErrorAlert(obj.errormesg);
+                return;
+            }
             $(".playedCardsGame").css("display", "none");
             $.each(obj.cards, function (index, value) {
                 if (value.card_style == "♦" || value.card_style == "♥") $("#gameDeck").append('<div class="deckCard red showBluffCardsOnCall" data-value="' + value.card_number + value.card_style + '">' + value.card_style + "</div>");
@@ -236,7 +247,7 @@ function callBluff() {
             bluffCards = [];
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -255,7 +266,7 @@ function collectBluffCards(playerToCollect) {
             getMyCards();
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -264,11 +275,8 @@ function passAction() {
     $.ajax({
         url: "bluff.php/game/passOnBluff",
         type: "GET",
-        success: function (response) {
-            console.log(response);
-        },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -281,7 +289,7 @@ function resetGamePasses() {
             resetPasses = false;
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -294,7 +302,7 @@ function addCartsToBank() {
             //take bank num
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -315,6 +323,10 @@ function showWinner() {
         type: "POST",
         success: function (response) {
             var winnerObj = JSON.parse(response);
+            if (winnerObj.hasOwnProperty("errormesg")) {
+                responseErrorAlert(obj.errormesg);
+                return;
+            }
             isWinnerAnnounced = true;
             $("#actionRow").css("display", "none");
             $("#gameCenterRow").css("display", "none");
@@ -324,7 +336,7 @@ function showWinner() {
             $("#announceWinnerHeader").text("🎉 Congratulations " + winnerObj.winner + " you won the game!! 🎉🥳");
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -337,7 +349,7 @@ function returnHomeAfterGameIsFinished() {
             location.href = "http://127.0.0.1/ADISE22_theItGuys/www/";
         },
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }
@@ -347,7 +359,7 @@ function seeIfYouWin() {
         url: "bluff.php/game/checkIfYouWin",
         type: "POST",
         error: function (response) {
-            console.log(response.error);
+            responseErrorAlert(response.error);
         },
     });
 }

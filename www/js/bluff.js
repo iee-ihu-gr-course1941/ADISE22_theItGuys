@@ -20,39 +20,12 @@ function log_in_to_game() {
         }),
         success: function (response) {
             me = response /* [0] */;
-            login_result();
+            responseSuccessAlert("You have logged in successfully");
             $("#usernameModal").toggle();
+            location.href = "http://127.0.0.1/ADISE22_theItGuys/www/";
         },
-        error: login_error,
+        error: responseErrorAlert("Something went wrong.."),
     });
-}
-
-function login_result() {
-    if ($("#successMessage").length == 0) {
-        $("body").append('<div id="successMessage"></div>');
-        $("#successMessage").css({
-            "background-color": "green",
-            color: "white",
-            position: "absolute",
-            top: "10%",
-        });
-        $("#successMessage").empty();
-        $("#successMessage").append("<p>You have logged in successfully</p>");
-    }
-}
-
-function login_error() {
-    if ($("#errorMessage").length == 0) {
-        $("body").append('<div id="errorMessage"></div>');
-        $("#errorMessage").css({
-            "background-color": "red",
-            color: "white",
-            position: "absolute",
-            top: "10%",
-        });
-        $("#errorMessage").empty();
-        $("#errorMessage").append("<p>Username field can not be empty</p>");
-    }
 }
 
 function has_user_logged_in() {
