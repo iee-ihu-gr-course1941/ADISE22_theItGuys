@@ -144,6 +144,14 @@ POST /players/
 
 Αποθηκεύει τον χρήστη
 
+# Βάση Δεδομένων
+
+## users
+
+| Attribute | Description |
+| --------- | ----------- |
+| id        |             |
+
 # Links
 
 [Uploaded Porject](https://users.it.teithe.gr/~it185416)
