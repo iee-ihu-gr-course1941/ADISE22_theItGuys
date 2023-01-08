@@ -350,6 +350,11 @@ function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
                 $curPlayingUser = -1;
     }
 
+    //add prev cards to bank
+    $addBankCards = $conn->prepare('UPDATE bluff SET actions="bank", actions_timestamp=NULL WHERE actions="played" AND room_id=?');
+    $addBankCards->bind_param('s', $_COOKIE["room"]);
+    $addBankCards->execute();
+
     //update game status 
     $stmt = $conn->prepare('UPDATE game_status SET player_turn_id=?, num_of_cards_played=?, value_of_cards_played=?, played_by=? WHERE room_id=?');
     $stmt->bind_param('iisss', $users[$curPlayingUser + 1]["id"], $numOfCardsPlayed, $valueOfCardsPlayed, json_decode($_SESSION["user"])->id, $_COOKIE["room"]);
