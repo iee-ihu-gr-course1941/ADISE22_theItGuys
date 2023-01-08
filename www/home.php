@@ -103,7 +103,7 @@ if (isset($_SESSION['user'])) {
 
             //get all rooms except full
             $.ajax({
-                url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/bluff/",
+                url: "bluff.php/bluff/",
                 type: "POST",
                 success: function(response) {
                     var count = 0;
@@ -121,7 +121,7 @@ if (isset($_SESSION['user'])) {
             var intervalId = window.setInterval(function() {
                 if ($("#totalRooms").text() !== "6") {
                     $.ajax({
-                        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/bluff/getTotalRooms",
+                        url: "bluff.php/bluff/getTotalRooms",
                         type: "POST",
                         success: function(response) {
                             $("#totalRooms").empty();

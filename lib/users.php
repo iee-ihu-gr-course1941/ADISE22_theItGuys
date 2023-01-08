@@ -8,7 +8,6 @@ function handleUser($method, $input)
 
 function setUser($usernameInput)
 {
-
     if (!isset($usernameInput['username']) || $usernameInput['username'] == '') {
         header("HTTP/1.1 400 Bad Request");
         print json_encode(['errormesg' => "No username given."]);

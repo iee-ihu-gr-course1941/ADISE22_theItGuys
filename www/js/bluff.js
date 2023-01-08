@@ -11,7 +11,7 @@ function log_in_to_game() {
     }
 
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/players/",
+        url: "bluff.php/players/",
         method: "POST",
         dataType: "json",
         contentType: "application/json",

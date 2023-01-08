@@ -31,7 +31,7 @@ $(function () {
 
 function get_room_info() {
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getInfo",
+        url: "bluff.php/game/getInfo",
         method: "POST",
         async: false,
         data: {
@@ -51,7 +51,7 @@ function get_room_info() {
 function getOtherUsersInRoom() {
     //get other users (usernames) in room
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getRoomPlayers",
+        url: "bluff.php/game/getRoomPlayers",
         type: "POST",
         async: false,
         data: {
@@ -71,7 +71,7 @@ function getOtherUsersInRoom() {
 
 function startGameBase() {
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/start",
+        url: "bluff.php/game/start",
         type: "GET",
         async: false,
         success: function (response) {
@@ -86,7 +86,7 @@ function startGameBase() {
 function isOwner() {
     var isOwner = false;
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getGameOwner",
+        url: "bluff.php/game/getGameOwner",
         type: "GET",
         async: false,
         success: function (response) {
@@ -109,7 +109,7 @@ function startGame() {
 
 function getMyCards() {
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getMyCards",
+        url: "bluff.php/game/getMyCards",
         method: "GET",
         async: false,
         success: function (response) {
@@ -146,7 +146,7 @@ function openBluffModal() {
 
 function submitYourBluff() {
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/playYourBluff",
+        url: "bluff.php/game/playYourBluff",
         type: "POST",
         data: {
             valueOfCardsPlayed: $(this).text(),
@@ -169,7 +169,7 @@ function submitYourBluff() {
 
 function getGameInfo() {
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getGameInfo",
+        url: "bluff.php/game/getGameInfo",
         type: "GET",
         success: function (response) {
             var obj = JSON.parse(response);
@@ -199,7 +199,7 @@ function getGameInfo() {
 
 function callBluff() {
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/callBluff",
+        url: "bluff.php/game/callBluff",
         type: "GET",
         success: function (response) {
             $("#callBluffBtn").prop("disabled", true);
@@ -220,7 +220,7 @@ function callBluff() {
 
 function collectBluffCards(playerToCollect) {
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/getCalledBluffCards",
+        url: "bluff.php/game/getCalledBluffCards",
         type: "POST",
         data: {
             userToCollectBank: playerToCollect,
@@ -237,7 +237,7 @@ function collectBluffCards(playerToCollect) {
 
 function passAction() {
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/passOnBluff",
+        url: "bluff.php/game/passOnBluff",
         type: "GET",
         success: function (response) {
             console.log(response);
@@ -250,7 +250,7 @@ function passAction() {
 
 function resetGamePasses() {
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/resetPasses",
+        url: "bluff.php/game/resetPasses",
         type: "POST",
         success: function (response) {
             resetPasses = false;
@@ -263,7 +263,7 @@ function resetGamePasses() {
 
 function addCartsToBank() {
     $.ajax({
-        url: "http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/addCardsToBank",
+        url: "bluff.php/game/addCardsToBank",
         type: "POST",
         success: function (response) {
             //take bank num

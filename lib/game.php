@@ -495,9 +495,6 @@ function passAction($method)
         $updatePass->bind_param('is', $users[$curPlayingUser + 1]["id"], $_COOKIE["room"]);
         $updatePass->execute();
     }
-
-    var_dump($passCount);
-    exit;
 }
 
 function resetGamePasses($method)
