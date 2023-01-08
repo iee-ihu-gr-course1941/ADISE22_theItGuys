@@ -78,7 +78,6 @@ function get_status_of_room($room_id)
     return $res->fetch_array(MYSQLI_ASSOC);
 }
 
-//get room info -- post (needs id)
 function get_room_info($room_id)
 {
     if (is_null($room_id) || empty($room_id)) {
