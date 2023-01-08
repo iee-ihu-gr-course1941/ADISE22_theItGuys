@@ -6,6 +6,7 @@ var myCards;
 var bluffCards = [];
 var resetPasses = false;
 var isWinnerAnnounced = false;
+var checkRoomStatus = null;
 
 $(function () {
     //fill room object
@@ -22,6 +23,8 @@ $(function () {
         else getMyCards();
         getGameInfo();
         var gameStatus = setInterval(getGameInfo, 4000);
+        clearInterval(checkRoomStatus);
+        $("#actionRow").css("display", "block");
     }
     $(".deckCard").on("click", selectCards);
     $("#chooseYourBluffBtn").on("click", openBluffModal);
@@ -42,10 +45,14 @@ function get_room_info() {
         success: function (response) {
             var obj = jQuery.parseJSON(response);
             console.log(obj); //handle error
-            $("#roomTitle").append(obj.name);
+            $("#roomTitle").text(obj.name);
             room.name = obj.name;
             room.users_online = obj.users_online;
             room.roomStatus = obj.status;
+            if (obj.users_online < 4) {
+                $("#actionRow").css("display", "none");
+                checkRoomStatus = setInterval(get_room_info, 1500);
+            }
         },
     });
 }
