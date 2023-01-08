@@ -26,7 +26,9 @@
 
 ### Game
 
-> bluff.php/game/getInfo
+```php
+bluff.php/game/getInfo
+```
 
 # Links
 
