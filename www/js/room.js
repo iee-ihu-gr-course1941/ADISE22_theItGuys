@@ -168,7 +168,7 @@ function submitYourBluff() {
             }
             $("#chooseYourBluff").modal("toggle");
             resetGamePasses();
-            addCartsToBank();
+            //addCartsToBank();
             bluffCards = [];
         },
         error: function (response) {
@@ -178,6 +178,7 @@ function submitYourBluff() {
 }
 
 function getGameInfo() {
+    seeIfYouWin();
     $.ajax({
         url: "bluff.php/game/getGameInfo",
         type: "GET",
@@ -222,6 +223,7 @@ function callBluff() {
         success: function (response) {
             $("#callBluffBtn").prop("disabled", true);
             var obj = JSON.parse(response);
+            console.log(obj);
             $(".playedCardsGame").css("display", "none");
             $.each(obj.cards, function (index, value) {
                 if (value.card_style == "♦" || value.card_style == "♥") $("#gameDeck").append('<div class="deckCard red showBluffCardsOnCall" data-value="' + value.card_number + value.card_style + '">' + value.card_style + "</div>");
@@ -334,6 +336,16 @@ function returnHomeAfterGameIsFinished() {
         success: function () {
             location.href = "http://127.0.0.1/ADISE22_theItGuys/www/";
         },
+        error: function (response) {
+            console.log(response.error);
+        },
+    });
+}
+
+function seeIfYouWin() {
+    $.ajax({
+        url: "bluff.php/game/checkIfYouWin",
+        type: "POST",
         error: function (response) {
             console.log(response.error);
         },

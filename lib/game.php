@@ -319,7 +319,7 @@ function getMyCards($method)
 function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
 {
     session_start();
-    if (strcmp($method, "GET") == 0) {
+    if (strcmp($method, "POST") != 0) {
         print json_encode(['errormesg' => "pathNotFound."]);
         exit;
     }
@@ -365,7 +365,7 @@ function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
 
 function getGameInfo($method)
 {
-    if (strcmp($method, "POST") == 0) {
+    if (strcmp($method, "GET") != 0) {
         print json_encode(['errormesg' => "pathNotFound."]);
         exit;
     }
@@ -374,7 +374,7 @@ function getGameInfo($method)
         exit;
     }
     global $conn;
-    checkIfWinner($_COOKIE["room"]);
+    //checkIfWinner($_COOKIE["room"]);
     $stmt = $conn->prepare('SELECT users.name AS "played_by", num_of_cards_played, value_of_cards_played, passes, first_winner_id FROM game_status JOIN users ON users.id = game_status.played_by WHERE game_status.room_id=?');
     $stmt->bind_param('s', $_COOKIE["room"]);
     $stmt->execute();
@@ -401,7 +401,7 @@ function getGameInfo($method)
 function callBluff($method)
 {
     session_start();
-    if (strcmp($method, "POST") == 0) {
+    if (strcmp($method, "GET") != 0) {
         print json_encode(['errormesg' => "Path Not Found."]);
         exit;
     }
@@ -514,6 +514,9 @@ function passAction($method)
     $passCount = $result->fetch_all(MYSQLI_ASSOC)[0]["passes"];
 
     if ($passCount == 3) {
+        $addToBank = $conn->prepare('UPDATE bluff SET actions="bank", actions_timestamp=NULL WHERE actions="played" AND room_id=?');
+        $addToBank->bind_param('s', $_COOKIE["room"]);
+        $addToBank->execute();
         print json_encode("Pass can not be submitted you can only play!");
         exit;
     }
@@ -555,32 +558,44 @@ function addCardsToBank($method)
 
     global $conn;
 
-    $clearPass = $conn->prepare('UPDATE bluff SET actions="bank", actions_timestamp=NULL WHERE actions="played" AND room_id=?');
-    $clearPass->bind_param('s', $_COOKIE["room"]);
-    $clearPass->execute();
+    $addToBank = $conn->prepare('UPDATE bluff SET actions="bank", actions_timestamp=NULL WHERE actions="played" AND room_id=?');
+    $addToBank->bind_param('s', $_COOKIE["room"]);
+    $addToBank->execute();
 }
 
-function checkIfWinner($roomId)
+function checkIfWinner($method)
 {
+    if (strcmp($method, "POST") != 0) {
+        print json_encode(['errormesg' => "pathNotFound."]);
+        exit;
+    }
+    if (!isset($_COOKIE["room"]) || (isset($_COOKIE["room"]) && empty($_COOKIE["room"]))) {
+        print json_encode(['errormesg' => "roomDoesNotExist."]);
+        exit;
+    }
     global $conn;
     $stmt = $conn->prepare('SELECT id,name FROM users WHERE room_id=? ORDER BY log_in_time asc');
-    $stmt->bind_param('s', $roomId);
+    $stmt->bind_param('s', $_COOKIE["room"]);
     $stmt->execute();
     $result = $stmt->get_result();
     $usersInRoom = $result->fetch_all(MYSQLI_ASSOC);
 
-    $checkWinner = $conn->prepare('SELECT count(*) AS "cards_number",user_id FROM bluff WHERE room_id=? AND user_id=?');
+    $checkWinner = $conn->prepare('SELECT count(*) AS "cards_number",user_id FROM bluff WHERE room_id=? AND user_id=? AND actions IS NULL');
     foreach ($usersInRoom as $user) {
-        $checkWinner->bind_param('ss', $roomId, $user["id"]);
+        $checkWinner->bind_param('ss', $_COOKIE["room"], $user["id"]);
         $checkWinner->execute();
         $result = $checkWinner->get_result();
         $cardsCount = $result->fetch_all(MYSQLI_ASSOC)[0]["cards_number"];
         if ($cardsCount == 0) {
             $setWinner = $conn->prepare('UPDATE game_status SET first_winner_id=? WHERE room_id=?');
-            $setWinner->bind_param('ss', $user["id"], $roomId);
+            $setWinner->bind_param('ss', $user["id"], $_COOKIE["room"]);
             $setWinner->execute();
+            print json_encode(['result' => true]);
+            exit;
         }
     }
+    print json_encode(['result' => false]);
+    exit;
 }
 
 function getGameWinner($method)

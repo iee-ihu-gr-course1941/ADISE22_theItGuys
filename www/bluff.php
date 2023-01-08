@@ -81,6 +81,9 @@ switch ($r = array_shift($request)) {
             case 'addCardsToBank':
                 addCardsToBank($method);
                 break;
+            case 'checkIfYouWin':
+                checkIfWinner($method);
+                break;
             case 'getWinner':
                 getGameWinner($method);
                 break;
