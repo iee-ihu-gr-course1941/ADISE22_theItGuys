@@ -28,11 +28,11 @@ if (isset($_SESSION['user'])) {
 </head>
 
 <body>
-    <div class="container-fluid bg-image">
+    <div class="container-fluid home-bg-image">
         <div id="showAvaibleRooms">
             <div class="row">
                 <div class="col-12">
-                    <div class="p-3 mb-2 bg-info text-white">
+                    <div class="p-3 mb-2 infoHeading text-white">
                         <span class="d-flex justify-content-between">
                             <span class="d-flex gap-1">
                                 <h2 class="text-center">Available Rooms:</h2>
@@ -67,31 +67,6 @@ if (isset($_SESSION['user'])) {
     </div>
     <!--  -->
 
-    <style>
-        html,
-        body {
-            box-sizing: border-box;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-        }
-
-        .bg-image {
-            /* The image used */
-            background-image: url("homeBg.jpg");
-            height: 100vh;
-            /* Center and scale the image nicely */
-            background-size: cover;
-        }
-
-        .box {
-            width: 160px;
-            height: 160px;
-            border: 1px solid black;
-            background-color: #008000;
-        }
-    </style>
-
     <script>
         $(document).ready(function() {
             //check if user needs to login
@@ -100,14 +75,11 @@ if (isset($_SESSION['user'])) {
             if (userName = '' || userName == null) {
                 has_user_logged_in();
             }
-
-            //get all rooms except full
             $.ajax({
                 url: "bluff.php/bluff/",
                 type: "POST",
                 success: function(response) {
                     var count = 0;
-                    //console.log(response.records.length);
                     for (var i = 1; i <= response.records.length; i++) {
                         if (i == 1 || (i - 1) % 4 == 0) $("#showAvaibleRooms").append('<div class="row d-flex gap-3"></div>');
                         //get last row of page
@@ -133,10 +105,8 @@ if (isset($_SESSION['user'])) {
                     });
                 }
             }, 5000);
-            //
         });
     </script>
-
 </body>
 
 </html>

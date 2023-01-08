@@ -29,7 +29,7 @@
     <div class="container-fluid bg-image">
         <div class="row">
             <input type="hidden" id="awesome" value="<?php if (isset($_COOKIE["room"]) && !is_null($_COOKIE["room"])) echo $_COOKIE["room"]; ?>">
-            <div class="col-12 text-center text-white d-flex flex-row justify-content-between">
+            <div class="col-12 text-center text-white d-flex flex-row justify-content-between p-3 infoHeading">
                 <h3 id="roomTitle"></h3>
 
                 <?php
@@ -75,7 +75,7 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-3" id="actionRow">
+        <div class="row" id="actionRow">
             <div class="col-12 bg-dark text-center" style="height: 25vh;">
                 <div id="myCardsDisplay" class="d-flex justify-content-center">
                 </div>

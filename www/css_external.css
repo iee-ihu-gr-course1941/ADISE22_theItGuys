@@ -1,6 +1,12 @@
-body{
+html,
+body {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    width: 100%;
     user-select: none;
 }
+
 .deckCard{
     height: 150px;
     width: 110px;
@@ -16,7 +22,7 @@ body{
 }
 
 .deckCard.red{
-   color: red; 
+    color: red; 
 }
 
 .deckCard.black{
@@ -73,6 +79,12 @@ transform: rotate(180deg);
     background-size: cover;
 }
 
+.home-bg-image{
+    background-image: url("homeBg.jpg");
+    height: 100vh;
+    background-size: cover;
+}
+
 .currentPlayingUserDisplay{
     border: 5px solid green;
     padding: 11px;
@@ -81,4 +93,15 @@ transform: rotate(180deg);
 
 .loggedInUsersTurn{
     border-top: 8px solid green;
+}
+
+.box {
+    width: 160px;
+    height: 160px;
+    border: 1px solid black;
+    background-color: #008000;
+}
+
+.infoHeading{
+    background-color: rgba(0, 0, 0, 0.671);
 }
