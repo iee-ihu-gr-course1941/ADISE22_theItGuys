@@ -26,6 +26,8 @@
 
 ### Game
 
+> bluff.php/game/getInfo
+
 # Links
 
 [Uploaded Porject](https://users.it.teithe.gr/~it185416)
