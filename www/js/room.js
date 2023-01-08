@@ -44,7 +44,10 @@ function get_room_info() {
         },
         success: function (response) {
             var obj = jQuery.parseJSON(response);
-            console.log(obj); //handle error
+            if (obj.hasOwnProperty("errormesg")) {
+                alert(obj.errormesg);
+                return;
+            }
             $("#roomTitle").text(obj.name);
             room.name = obj.name;
             room.users_online = obj.users_online;
