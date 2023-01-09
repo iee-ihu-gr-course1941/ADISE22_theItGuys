@@ -101,6 +101,9 @@ switch ($r = array_shift($request)) {
             case null:
                 handleUser($method, $input);
                 break;
+            case 'handleRoom':
+                handleRoom($method);
+                break;
             default:
                 header("HTTP/1.1 404 Not Found");
                 break;

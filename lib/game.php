@@ -213,9 +213,16 @@ function startGame()
         print json_encode(['errormesg' => "Game has already started."]);
         exit;
     }
-    $stmt = $conn->prepare('INSERT INTO game_status(player_turn_id ,room_id) VALUES (?,?);');
-    $stmt->bind_param('ss', $playersTurn, $_COOKIE["room"]);
+    /* deployment */
+    $passes = "0";
+    $bluffed = "0";
+    $round_moves = "0";
+    $stmt = $conn->prepare('INSERT INTO game_status(player_turn_id ,room_id,passes,bluffed,round_moves) VALUES (?,?,?,?,?);');
+    $stmt->bind_param('sssss', $playersTurn, $_COOKIE["room"], $passes, $bluffed, $round_moves);
     $stmt->execute();
+    /* $stmt = $conn->prepare('INSERT INTO game_status(player_turn_id ,room_id) VALUES (?,?);');
+    $stmt->bind_param('ss', $playersTurn, $_COOKIE["room"]);
+    $stmt->execute(); */
 
     createDeckOfCardsAndSplit();
 }

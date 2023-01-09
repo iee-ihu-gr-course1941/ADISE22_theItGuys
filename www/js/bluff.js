@@ -2,6 +2,7 @@ var me = { token: null };
 
 $(function () {
     $("#submitUsername").click(log_in_to_game);
+    restoreRooms();
 });
 
 function log_in_to_game() {
@@ -30,4 +31,16 @@ function log_in_to_game() {
 
 function has_user_logged_in() {
     if (me.token === null) $("#usernameModal").toggle();
+}
+
+function restoreRooms() {
+    $.ajax({
+        url: "bluff.php/players/handleRoom",
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        error: function (response) {
+            responseErrorAlert(response);
+        },
+    });
 }

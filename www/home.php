@@ -1,10 +1,5 @@
 <?php
 session_start();
-if (isset($_COOKIE['room'])) {
-    unset($_COOKIE['room']);
-    setcookie('room', null, -1, '/');
-}
-
 if (isset($_SESSION['user'])) {
     $json = json_decode($_SESSION['user']);
     $name =  (string)$json->name;
@@ -69,10 +64,8 @@ include_once "./inc/notifications.php";
         </div>
     </div>
     <!--  -->
-
     <script>
         $(document).ready(function() {
-            //check if user needs to login
             var userName = <?php if (!empty($_SESSION['user'])) echo $_SESSION['user'];
                             else echo "null"; ?>;
             if (userName = '' || userName == null) {
@@ -85,14 +78,11 @@ include_once "./inc/notifications.php";
                     var count = 0;
                     for (var i = 1; i <= response.records.length; i++) {
                         if (i == 1 || (i - 1) % 4 == 0) $("#showAvaibleRooms").append('<div class="row d-flex gap-3"></div>');
-                        //get last row of page
                         $(".row:last-child").append('<a style="width:fit-content" href="http://127.0.0.1/ADISE22_theItGuys/www/bluff.php/game/' + response.records[i - 1].id + '" ><div class="box"><h3 class="boxTitle"><h3 style="color:white;text-align:center;">' + response.records[i - 1].name + "</h3></div></a>");
                     }
-                    //set avaible rooms
                     $("#totalRooms").text(response.count);
                 },
             });
-            //set interval every 5 sec to reload avaible rooms
             var intervalId = window.setInterval(function() {
                 if ($("#totalRooms").text() !== "6") {
                     $.ajax({

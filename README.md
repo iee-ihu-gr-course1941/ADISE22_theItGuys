@@ -204,4 +204,4 @@ POST /players/
 
 # Links
 
-[Uploaded Porject](https://users.it.teithe.gr/~it185416)
+[Uploaded Project](https://users.it.teithe.gr/~it185416)

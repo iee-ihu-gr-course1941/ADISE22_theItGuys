@@ -205,7 +205,7 @@ function getGameInfo() {
                     $("#passBtn").prop("disabled", true);
                     resetPasses = true;
                 }
-                if (obj.bluffed === 1 || obj.hasOwnProperty("bluffed")) {
+                if (obj.bluffed === 1 /* || obj.hasOwnProperty("bluffed") */) {
                     $("#callBluffBtn").prop("disabled", true);
                     $("#passBtn").prop("disabled", true);
                 } else {
@@ -219,11 +219,9 @@ function getGameInfo() {
             }
             showCurrentUserPlaying(obj.playing_now);
 
-            if (obj.round_moves > 0 && obj.round_moves <= 4) playSpecificCard = obj.value_of_cards_played;
+            if (obj.round_moves > 1 && obj.round_moves <= 4) playSpecificCard = obj.value_of_cards_played;
 
-            if (obj.round_moves == 0) playSpecificCard = null;
-            /* 
-            console.log(obj.round_moves > 0 && obj.round_moves <= 4); */
+            if (obj.round_moves == 1) playSpecificCard = null;
         },
         error: function (response) {
             responseErrorAlert(response.error);
