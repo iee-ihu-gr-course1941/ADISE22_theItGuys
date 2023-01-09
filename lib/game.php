@@ -202,7 +202,6 @@ function startGame()
         exit;
     }
     $playersTurn = getGameOwner();
-    $gameEnded = "0";
 
     global $conn;
     $check = $conn->prepare('SELECT * FROM game_status WHERE room_id=?');
@@ -214,9 +213,8 @@ function startGame()
         print json_encode(['errormesg' => "Game has already started."]);
         exit;
     }
-
-    $stmt = $conn->prepare('INSERT INTO game_status(player_turn_id ,room_id ,game_ended) VALUES (?,?,?);');
-    $stmt->bind_param('sss', $playersTurn, $_COOKIE["room"], $gameEnded);
+    $stmt = $conn->prepare('INSERT INTO game_status(player_turn_id ,room_id) VALUES (?,?);');
+    $stmt->bind_param('ss', $playersTurn, $_COOKIE["room"]);
     $stmt->execute();
 
     createDeckOfCardsAndSplit();
@@ -245,9 +243,8 @@ function createDeckOfCardsAndSplit()
     $values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     $deckOfCards = array();
 
-    $usersInGame = []; //"13", "4", "3", "6"
+    $usersInGame = [];
 
-    //get users in room (temp)
     global $conn;
     $stmt = $conn->prepare('select id from users where room_id=? order by log_in_time asc');
     $stmt->bind_param('s', $_COOKIE["room"]);
@@ -271,7 +268,6 @@ function createDeckOfCardsAndSplit()
 
         $deckOfCards[$i]["user"] = $usersInGame[$usersInGameIndex];
     }
-    //save to db
     addCardsToDb($deckOfCards);
 }
 
@@ -281,7 +277,6 @@ function addCardsToDb($deckOfCards)
         print json_encode(['errormesg' => "roomDoesNotExist."]);
         exit;
     }
-
     global $conn;
 
     foreach ($deckOfCards as $card) {
@@ -366,6 +361,10 @@ function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
         $cards_stmt->bind_param('s', $card);
         $cards_stmt->execute();
     }
+
+    $stmt = $conn->prepare('UPDATE game_status SET bluffed=0 WHERE room_id=?');
+    $stmt->bind_param('s', $_COOKIE["room"]);
+    $stmt->execute();
 }
 
 function getGameInfo($method)
@@ -379,8 +378,7 @@ function getGameInfo($method)
         exit;
     }
     global $conn;
-    //checkIfWinner($_COOKIE["room"]);
-    $stmt = $conn->prepare('SELECT users.name AS "played_by", num_of_cards_played, value_of_cards_played, passes, first_winner_id FROM game_status JOIN users ON users.id = game_status.played_by WHERE game_status.room_id=?');
+    $stmt = $conn->prepare('SELECT users.name AS "played_by", num_of_cards_played, value_of_cards_played, passes, first_winner_id, game_status.bluffed FROM game_status JOIN users ON users.id = game_status.played_by WHERE game_status.room_id=?');
     $stmt->bind_param('s', $_COOKIE["room"]);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -393,7 +391,6 @@ function getGameInfo($method)
     $userPlayingNow = $result->fetch_all(MYSQLI_ASSOC)[0];
 
     $fullData = array_merge($lastBluffInfo, $userPlayingNow);
-
     if (empty($lastBluffInfo)) {
         print json_encode($fullData);
         exit;
@@ -445,6 +442,10 @@ function callBluff($method)
         $cards_stmt->bind_param('is', $lastBluffInfo["played_by"], $_COOKIE["room"]);
         $cards_stmt->execute();
     }
+
+    $stmt = $conn->prepare('UPDATE game_status SET bluffed=1 WHERE room_id=?');
+    $stmt->bind_param('s', $_COOKIE["room"]);
+    $stmt->execute();
 
     if ($hasBluffed)
         print json_encode(["result" => $hasBluffed, "cards" => $playedCards, "playerForBank" => $lastBluffInfo["played_by"]]);

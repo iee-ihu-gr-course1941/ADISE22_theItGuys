@@ -61,7 +61,6 @@ function get_room_info() {
 }
 
 function getOtherUsersInRoom() {
-    //get other users (usernames) in room
     $.ajax({
         url: "bluff.php/game/getRoomPlayers",
         type: "POST",
@@ -86,13 +85,6 @@ function startGameBase() {
         url: "bluff.php/game/start",
         type: "GET",
         async: false,
-        success: function (response) {
-            var obj = JSON.parse(response);
-            if (obj.hasOwnProperty("errormesg")) {
-                responseErrorAlert(obj.errormesg);
-                return;
-            }
-        },
         error: function (response) {
             responseErrorAlert(response.error);
         },
@@ -172,8 +164,8 @@ function submitYourBluff() {
             }
             $("#chooseYourBluff").modal("toggle");
             resetGamePasses();
-            //addCartsToBank();
             bluffCards = [];
+            getGameInfo();
         },
         error: function (response) {
             responseErrorAlert(response.error);
@@ -204,12 +196,17 @@ function getGameInfo() {
             }
             if (obj.playing_now === $("#playerUsername").text()) {
                 $("#chooseYourBluffBtn").prop("disabled", false);
-                if (obj.played_by == null && obj.num_of_cards_played == null) $("#callBluffBtn").prop("disabled", true);
-                else $("#callBluffBtn").prop("disabled", false);
                 if (obj.passes < 3) $("#passBtn").prop("disabled", false);
                 else {
                     $("#passBtn").prop("disabled", true);
                     resetPasses = true;
+                }
+                if (obj.bluffed === 1) {
+                    $("#callBluffBtn").prop("disabled", true);
+                    $("#passBtn").prop("disabled", true);
+                } else {
+                    $("#callBluffBtn").prop("disabled", false);
+                    $("#passBtn").prop("disabled", false);
                 }
             } else {
                 $("#chooseYourBluffBtn").prop("disabled", true);
@@ -245,6 +242,7 @@ function callBluff() {
             $("#myCardsDisplay").empty();
             getMyCards();
             bluffCards = [];
+            getGameInfo();
         },
         error: function (response) {
             responseErrorAlert(response.error);
@@ -275,6 +273,9 @@ function passAction() {
     $.ajax({
         url: "bluff.php/game/passOnBluff",
         type: "GET",
+        success: function () {
+            getGameInfo();
+        },
         error: function (response) {
             responseErrorAlert(response.error);
         },

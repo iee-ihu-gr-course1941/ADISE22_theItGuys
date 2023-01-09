@@ -1,10 +1,8 @@
 <?php
-
 require_once "../lib/DBConnection.php";
 require_once "../lib/home.php";
 require_once "../lib/game.php";
 require_once "../lib/users.php";
-
 
 $method = $_SERVER['REQUEST_METHOD'];
 
