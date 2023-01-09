@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Εξυπηρετητής: 127.0.0.1
--- Χρόνος δημιουργίας: 08 Ιαν 2023 στις 20:53:40
+-- Χρόνος δημιουργίας: 09 Ιαν 2023 στις 15:50:03
 -- Έκδοση διακομιστή: 10.4.24-MariaDB
 -- Έκδοση PHP: 7.4.29
 
@@ -27,7 +27,6 @@ SET time_zone = "+00:00";
 -- Δομή πίνακα για τον πίνακα `bluff`
 --
 
-DROP TABLE IF EXISTS `bluff`;
 CREATE TABLE `bluff` (
   `id` int(11) NOT NULL,
   `card_number` varchar(255) NOT NULL,
@@ -44,19 +43,18 @@ CREATE TABLE `bluff` (
 -- Δομή πίνακα για τον πίνακα `game_status`
 --
 
-DROP TABLE IF EXISTS `game_status`;
 CREATE TABLE `game_status` (
   `id` int(11) NOT NULL,
   `player_turn_id` int(11) NOT NULL,
   `first_winner_id` int(11) DEFAULT NULL,
-  `second_winner_id` int(11) DEFAULT NULL,
   `last_change` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `room_id` int(11) NOT NULL,
   `num_of_cards_played` int(11) DEFAULT NULL,
   `value_of_cards_played` varchar(5) DEFAULT NULL,
   `played_by` int(11) DEFAULT NULL,
   `passes` int(11) NOT NULL,
-  `game_ended` tinyint(1) NOT NULL
+  `bluffed` tinyint(1) NOT NULL,
+  `round_moves` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -65,7 +63,6 @@ CREATE TABLE `game_status` (
 -- Δομή πίνακα για τον πίνακα `rooms`
 --
 
-DROP TABLE IF EXISTS `rooms`;
 CREATE TABLE `rooms` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -80,7 +77,6 @@ CREATE TABLE `rooms` (
 -- Δομή πίνακα για τον πίνακα `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -108,7 +104,6 @@ ALTER TABLE `game_status`
   ADD PRIMARY KEY (`id`),
   ADD KEY `player_turn_id` (`player_turn_id`),
   ADD KEY `first_winner_id` (`first_winner_id`),
-  ADD KEY `second_winner_id` (`second_winner_id`),
   ADD KEY `room_id` (`room_id`);
 
 --
@@ -169,7 +164,6 @@ ALTER TABLE `bluff`
 ALTER TABLE `game_status`
   ADD CONSTRAINT `game_status_ibfk_1` FOREIGN KEY (`player_turn_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `game_status_ibfk_2` FOREIGN KEY (`first_winner_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `game_status_ibfk_3` FOREIGN KEY (`second_winner_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `game_status_ibfk_4` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`);
 
 --
