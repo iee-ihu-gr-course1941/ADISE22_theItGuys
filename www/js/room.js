@@ -7,6 +7,7 @@ var bluffCards = [];
 var resetPasses = false;
 var isWinnerAnnounced = false;
 var checkRoomStatus = null;
+var playSpecificCard = null;
 
 $(function () {
     //fill room object
@@ -151,6 +152,12 @@ function openBluffModal() {
 }
 
 function submitYourBluff() {
+    if (playSpecificCard != null) {
+        if ($(this).text() !== playSpecificCard) {
+            responseErrorAlert("You can only bluff " + playSpecificCard);
+            return;
+        }
+    }
     $.ajax({
         url: "bluff.php/game/playYourBluff",
         type: "POST",
@@ -158,7 +165,7 @@ function submitYourBluff() {
             valueOfCardsPlayed: $(this).text(),
             cardsPlayed: bluffCards,
         },
-        success: function () {
+        success: function (response) {
             for (var i = 0; i < bluffCards.length; ++i) {
                 $("#" + bluffCards[i]).remove();
             }
@@ -201,7 +208,7 @@ function getGameInfo() {
                     $("#passBtn").prop("disabled", true);
                     resetPasses = true;
                 }
-                if (obj.bluffed === 1) {
+                if (obj.bluffed === 1 || obj.hasOwnProperty("bluffed")) {
                     $("#callBluffBtn").prop("disabled", true);
                     $("#passBtn").prop("disabled", true);
                 } else {
@@ -214,6 +221,12 @@ function getGameInfo() {
                 $("#passBtn").prop("disabled", true);
             }
             showCurrentUserPlaying(obj.playing_now);
+
+            if (obj.round_moves > 0 && obj.round_moves <= 4) playSpecificCard = obj.value_of_cards_played;
+
+            if (obj.round_moves == 0) playSpecificCard = null;
+            /* 
+            console.log(obj.round_moves > 0 && obj.round_moves <= 4); */
         },
         error: function (response) {
             responseErrorAlert(response.error);

@@ -327,6 +327,8 @@ function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
         exit;
     }
 
+    resetRoundMoves(false, $_COOKIE["room"]);
+
     $numOfCardsPlayed = sizeof($cardsPlayed);
 
     global $conn;
@@ -365,6 +367,8 @@ function playMyBluff($method, $valueOfCardsPlayed, $cardsPlayed)
     $stmt = $conn->prepare('UPDATE game_status SET bluffed=0 WHERE room_id=?');
     $stmt->bind_param('s', $_COOKIE["room"]);
     $stmt->execute();
+
+    addMoveToGame($_COOKIE["room"]);
 }
 
 function getGameInfo($method)
@@ -378,7 +382,7 @@ function getGameInfo($method)
         exit;
     }
     global $conn;
-    $stmt = $conn->prepare('SELECT users.name AS "played_by", num_of_cards_played, value_of_cards_played, passes, first_winner_id, game_status.bluffed FROM game_status JOIN users ON users.id = game_status.played_by WHERE game_status.room_id=?');
+    $stmt = $conn->prepare('SELECT users.name AS "played_by", num_of_cards_played, value_of_cards_played, passes, first_winner_id, game_status.bluffed, round_moves FROM game_status JOIN users ON users.id = game_status.played_by WHERE game_status.room_id=?');
     $stmt->bind_param('s', $_COOKIE["room"]);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -447,6 +451,8 @@ function callBluff($method)
     $stmt->bind_param('s', $_COOKIE["room"]);
     $stmt->execute();
 
+    resetRoundMoves(true, $_COOKIE["room"]);
+
     if ($hasBluffed)
         print json_encode(["result" => $hasBluffed, "cards" => $playedCards, "playerForBank" => $lastBluffInfo["played_by"]]);
 
@@ -496,6 +502,7 @@ function passAction($method)
         print json_encode(['errormesg' => "User not found."]);
         exit;
     }
+    resetRoundMoves(false, $_COOKIE["room"]);
     global $conn;
 
     $stmt = $conn->prepare('select id from users where room_id=? order by log_in_time asc');
@@ -531,6 +538,8 @@ function passAction($method)
         $updatePass->bind_param('is', $users[$curPlayingUser + 1]["id"], $_COOKIE["room"]);
         $updatePass->execute();
     }
+
+    addMoveToGame($_COOKIE["room"]);
 }
 
 function resetGamePasses($method)
@@ -656,4 +665,36 @@ function restoreRoomAndClean($method)
     $updateUsers = $conn->prepare('UPDATE users SET room_id=NULL WHERE room_id=?;');
     $updateUsers->bind_param('s', $_COOKIE["room"]);
     $updateUsers->execute();
+}
+
+function resetRoundMoves($fromCalledBluff, $roomID)
+{
+    global $conn;
+    if (!$fromCalledBluff) {
+        $stmt = $conn->prepare('SELECT round_moves FROM game_status WHERE room_id=?;');
+        $stmt->bind_param('s', $roomID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $moves = $result->fetch_array(MYSQLI_ASSOC)["round_moves"];
+
+        if ($moves == 4) {
+            $updateMoves = $conn->prepare('UPDATE game_status SET round_moves=0 WHERE room_id=?;');
+            $updateMoves->bind_param('s', $roomID);
+            $updateMoves->execute();
+        }
+    }
+    if ($fromCalledBluff) {
+        $updateMoves = $conn->prepare('UPDATE game_status SET round_moves=0 WHERE room_id=?;');
+        $updateMoves->bind_param('s', $roomID);
+        $updateMoves->execute();
+    }
+}
+
+function addMoveToGame($roomID)
+{
+    global $conn;
+
+    $updateMoves = $conn->prepare('UPDATE game_status SET round_moves=round_moves+1 WHERE room_id=?;');
+    $updateMoves->bind_param('s', $roomID);
+    $updateMoves->execute();
 }
