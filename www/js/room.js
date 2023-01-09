@@ -384,6 +384,14 @@ function getGameStatus() {
         },
         success: function (response) {
             room.roomStatus = JSON.parse(response).status;
+            if (room.roomStatus === "full") {
+                $("#actionRow").css("display", "block");
+                if (isOwner()) startGame();
+                else getMyCards();
+                getGameInfo();
+                var gameStatus = setInterval(getGameInfo, 4000);
+                clearInterval(getStatus);
+            }
         },
         error: function (response) {
             responseErrorAlert(response.error);
